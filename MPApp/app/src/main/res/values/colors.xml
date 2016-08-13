@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#e60202</color>
+    <color name="colorPrimaryDark">#b71c1c</color>
+    <color name="colorAccent">#b71c1c</color>
+    <color name="vodafoneRed">#e60202</color>
+    <color name="white">#ffffff</color>
+    <color name="vodafoneGrey">#4a4d4e</color>
+</resources>

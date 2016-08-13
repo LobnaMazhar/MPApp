@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.materialplanning.vodafone.mpapp">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="Material Planning"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".welcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".loginActivity" />
+        <activity
+            android:name=".homeActivity"
+            android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ScenariosActivity"
+            android:label="@string/title_activity_scenarios"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".itemsActivity"
+            android:label="@string/title_activity_items"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".technicalPlansActivity"
+            android:label="@string/title_activity_technical_plans"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".addUserActivity"
+            android:label="@string/title_activity_add_user"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".itemViewActivity"
+            android:label="@string/title_activity_item_view"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+    </application>
+
+</manifest>

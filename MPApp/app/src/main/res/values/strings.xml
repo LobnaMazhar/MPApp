@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MPApp</string>
+    <string name="title_activity_home">homeActivity</string>
+    <string name="title_activity_scenarios">ScenariosActivity</string>
+    <string name="title_activity_items">itemsActivity</string>
+    <string name="title_activity_technical_plans">technicalPlansActivity</string>
+    <string name="title_activity_add_user">addUserActivity</string>
+    <string name="title_activity_item_view">itemViewActivity</string>
+</resources>
