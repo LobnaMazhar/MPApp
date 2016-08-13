@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Created by Lobna on 12-Aug-16.
  */
 public class itemAdapter extends ArrayAdapter<item> {
-    Context context;
+    Context context; // TAKE CARE ::: CONTEXT IS NOT PRIVATE
     ArrayList<item> items;
 
     public itemAdapter(Context context, ArrayList<item> items) {
@@ -26,6 +26,7 @@ public class itemAdapter extends ArrayAdapter<item> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+        //LayoutInflater inflater = LayoutInflater.from(getContext());
 
         View itemListView = inflater.inflate(R.layout.itemslist_row, parent, false);
 
@@ -33,7 +34,7 @@ public class itemAdapter extends ArrayAdapter<item> {
         TextView itemListItemEvoCodeTextView = (TextView) itemListView.findViewById(R.id.itemListItemEvoCodeTextView);
         itemListItemEvoCodeTextView.setText(itemObject.getItemEvoCode());
         TextView itemListItemQuantityTextView = (TextView) itemListView.findViewById(R.id.itemListItemQuantityTextView);
-        itemListItemQuantityTextView.setText(itemObject.getItemQuantity());
+        itemListItemQuantityTextView.setText(Integer.toString(itemObject.getItemQuantity()));
 
         return itemListView;
     }

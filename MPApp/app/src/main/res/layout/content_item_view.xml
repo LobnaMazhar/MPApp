@@ -60,6 +60,29 @@
         android:layout_alignRight="@+id/itemShortDescriptionTextView"
         android:layout_alignEnd="@+id/itemShortDescriptionTextView" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit"
+        android:id="@+id/editItemButton"
+        android:layout_marginTop="58dp"
+        android:onClick="editItem"
+        android:layout_below="@+id/itemPriceTextView"
+        android:layout_toRightOf="@+id/price"
+        android:layout_toEndOf="@+id/price" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        android:id="@+id/deleteItemButton"
+        android:onClick="deleteItem"
+        android:layout_alignTop="@+id/editItemButton"
+        android:layout_alignRight="@+id/itemPriceTextView"
+        android:layout_alignEnd="@+id/itemPriceTextView"
+        android:layout_marginRight="35dp"
+        android:layout_marginEnd="35dp" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -71,35 +94,14 @@
         android:layout_alignParentStart="true" />
 
     <TextView
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/itemPriceTextView"
         android:layout_below="@+id/price"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/itemQuantityTextView"
         android:layout_alignEnd="@+id/itemQuantityTextView" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit"
-        android:id="@+id/editItemButton"
-        android:layout_marginTop="54dp"
-        android:layout_below="@+id/itemPriceTextView"
-        android:layout_toRightOf="@+id/price"
-        android:layout_toEndOf="@+id/price"
-        android:onClick="editItem" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Delete"
-        android:id="@+id/deleteItemButton"
-        android:layout_alignTop="@+id/editItemButton"
-        android:layout_toRightOf="@+id/itemEvoCodeTextView"
-        android:layout_toEndOf="@+id/itemEvoCodeTextView"
-        android:layout_marginLeft="32dp"
-        android:layout_marginStart="32dp"
-        android:onClick="deleteItem" />
 
 </RelativeLayout>

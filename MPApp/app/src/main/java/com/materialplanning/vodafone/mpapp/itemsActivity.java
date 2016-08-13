@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,23 +59,27 @@ public class itemsActivity extends AppCompatActivity {
                     ListView itemsList = (ListView) findViewById(R.id.itemsListView);
                     itemsList.setAdapter(itemListAdapter);
 
-                    // TODO onItemClickListener
-                    itemsList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, final int position, long id) {
-                            try {
-                                Intent intent = new Intent(itemsActivity.this, itemViewActivity.class);
+                    // On item click listener
+                    itemsList.setOnItemClickListener(
+                            new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                    try{
 
-                                intent.putExtra("itemID", reader.getJSONObject(position).getInt("itemID"));
-                                intent.putExtra("itemEvoCode", reader.getJSONObject(position).getString("itemEvoCode"));
-                                intent.putExtra("itemShortDescription", reader.getJSONObject(position).getString("itemShortDescription"));
-                                intent.putExtra("itemQuantity", reader.getJSONObject(position).getInt("itemQuantity"));
+                                       Intent goToItem = new Intent(itemsActivity.this, itemViewActivity.class);
 
-                                startActivity(intent);
-                            }catch (JSONException e){
+                                        goToItem.putExtra("itemID", reader.getJSONObject(position).getInt("itemID"));
+                                        goToItem.putExtra("itemEvoCode", reader.getJSONObject(position).getString("itemEvoCode"));
+                                        goToItem.putExtra("itemShortDescription", reader.getJSONObject(position).getString("itemShortDescription"));
+                                        goToItem.putExtra("itemQuantity", reader.getJSONObject(position).getInt("itemQuantity"));
+
+                                        startActivity(goToItem);
+
+                                    }
+                                    catch (JSONException e){}
+                                }
                             }
-                        }
-                    });
+                    );
 
                 } catch (JSONException e) {
                 }
@@ -82,6 +87,4 @@ public class itemsActivity extends AppCompatActivity {
         });
         conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getItems");
     }
-
-
 }

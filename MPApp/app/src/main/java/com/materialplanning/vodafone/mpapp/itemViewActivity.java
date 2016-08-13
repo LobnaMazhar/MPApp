@@ -25,13 +25,13 @@ public class itemViewActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         TextView itemEvoCodeTextView = (TextView) findViewById(R.id.itemEvoCodeTextView);
-        itemEvoCodeTextView.setText(savedInstanceState.getString("itemEvoCode"));
+        itemEvoCodeTextView.setText(getIntent().getExtras().getString("itemEvoCode"));
 
         TextView itemShortDescriptionTextView = (TextView) findViewById(R.id.itemShortDescriptionTextView);
-        itemShortDescriptionTextView.setText(savedInstanceState.getString("itemShortDescription"));
+        itemShortDescriptionTextView.setText(getIntent().getExtras().getString("itemShortDescription"));
 
         TextView itemQuantityTextView = (TextView) findViewById(R.id.itemQuantityTextView);
-        itemQuantityTextView.setText(savedInstanceState.getInt("itemQuantity"));
+        itemQuantityTextView.setText(Integer.toString(getIntent().getExtras().getInt("itemQuantity")));
     }
 
     public void editItem(View view){

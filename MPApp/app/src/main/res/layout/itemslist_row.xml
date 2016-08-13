@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/itemListItemEvoCodeTextView" />
+        android:id="@+id/itemListItemEvoCodeTextView"
+        android:focusable="false"/>
 
-    <EditText
-        android:layout_width="168dp"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="numberSigned"
-        android:ems="10"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/itemListItemQuantityTextView"
-        android:layout_gravity="right" />
+        android:layout_gravity="right"
+        android:inputType="number"
+        android:focusable="false"/>
 </LinearLayout>

@@ -9,6 +9,9 @@ public class item {
     String itemShortDescription;
     int itemQuantity;
 
+    public item(){
+    }
+
     public String getItemEvoCode(){
         return itemEvoCode;
     }
