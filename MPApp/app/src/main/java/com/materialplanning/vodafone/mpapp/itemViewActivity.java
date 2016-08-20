@@ -1,18 +1,13 @@
 package com.materialplanning.vodafone.mpapp;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,16 +20,17 @@ public class itemViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_view);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(getIntent().getExtras().getString("itemEvoCode"));
         setSupportActionBar(toolbar);
 
-        TextView itemEvoCodeTextView = (TextView) findViewById(R.id.itemEvoCodeTextView);
-        itemEvoCodeTextView.setText(getIntent().getExtras().getString("itemEvoCode"));
+        TextView itemEvoCodeEditText = (TextView) findViewById(R.id.itemEvoCodeEditText);
+        itemEvoCodeEditText.setText(getIntent().getExtras().getString("itemEvoCode"));
 
-        TextView itemShortDescriptionTextView = (TextView) findViewById(R.id.itemShortDescriptionTextView);
-        itemShortDescriptionTextView.setText(getIntent().getExtras().getString("itemShortDescription"));
+        TextView itemShortDescriptionEditText = (TextView) findViewById(R.id.itemShortDescriptionEditText);
+        itemShortDescriptionEditText.setText(getIntent().getExtras().getString("itemShortDescription"));
 
-        TextView itemQuantityTextView = (TextView) findViewById(R.id.itemQuantityTextView);
-        itemQuantityTextView.setText(Integer.toString(getIntent().getExtras().getInt("itemQuantity")));
+        TextView itemQuantityEditText = (TextView) findViewById(R.id.itemQuantityEditText);
+        itemQuantityEditText.setText(Integer.toString(getIntent().getExtras().getInt("itemQuantity")));
     }
 
     /*
@@ -114,16 +110,16 @@ public class itemViewActivity extends AppCompatActivity {
         String itemID = Integer.toString(getIntent().getExtras().getInt("itemID"));
         params.put("itemID", itemID);
 
-        TextView itemEvoCodeTextView = (TextView) findViewById(R.id.itemEvoCodeTextView);
-        String itemEvoCode = itemEvoCodeTextView.getText().toString();
+        TextView itemEvoCodeEditText = (TextView) findViewById(R.id.itemEvoCodeEditText);
+        final String itemEvoCode = itemEvoCodeEditText.getText().toString();
         params.put("itemEvoCode", itemEvoCode);
 
-        TextView itemShortDescriptionTextView = (TextView) findViewById(R.id.itemShortDescriptionTextView);
-        String itemShortDescription = itemShortDescriptionTextView.getText().toString();
+        TextView itemShortDescriptionEditText = (TextView) findViewById(R.id.itemShortDescriptionEditText);
+        final String itemShortDescription = itemShortDescriptionEditText.getText().toString();
         params.put("itemShortDescription", itemShortDescription);
 
-        TextView itemQuantityTextView = (TextView) findViewById(R.id.itemQuantityTextView);
-        String itemQuantity = itemQuantityTextView.getText().toString();
+        TextView itemQuantityEditText = (TextView) findViewById(R.id.itemQuantityEditText);
+        final String itemQuantity = itemQuantityEditText.getText().toString();
         params.put("itemQuantity", itemQuantity);
 
 
@@ -132,12 +128,21 @@ public class itemViewActivity extends AppCompatActivity {
             public void doSomething(String result) {
                 try {
                     JSONObject reader = new JSONObject(result);
-                    if(reader.getBoolean("Edited")){
-                        Intent intent = new Intent(itemViewActivity.this, itemViewActivity.class);
-                        startActivity(intent);
+                    if(reader.getBoolean("edited")){
+                        Toast.makeText(itemViewActivity.this, "Item is edited", Toast.LENGTH_SHORT).show();
+
+                        Intent goToItem = new Intent(itemViewActivity.this, itemViewActivity.class);
+
+                        goToItem.putExtra("itemID", getIntent().getExtras().getInt("itemID"));
+                        goToItem.putExtra("itemEvoCode", itemEvoCode);
+                        goToItem.putExtra("itemShortDescription", itemShortDescription);
+                        goToItem.putExtra("itemQuantity", Integer.parseInt(itemQuantity));
+
+                        startActivity(goToItem);
                         finish();
                     }
                 }catch (JSONException e){
+                    Toast.makeText(itemViewActivity.this, "Edit is invalid, same data exists", Toast.LENGTH_LONG).show();
                 }
             }
         });

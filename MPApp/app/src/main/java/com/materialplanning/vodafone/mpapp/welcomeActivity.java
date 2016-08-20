@@ -20,6 +20,6 @@ public class welcomeActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish(); //so it won't be stacked behind logIn
             }
-        }, 3000);
+        }, 2000);
     }
 }

@@ -12,13 +12,14 @@
     tools:context="com.materialplanning.vodafone.mpapp.itemViewActivity"
     tools:showIn="@layout/activity_item_view">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <EditText
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/itemEvoCodeTextView"
+        android:id="@+id/itemEvoCodeEditText"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+        android:editable="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,19 +28,20 @@
         android:text="Description"
         android:id="@+id/description"
         android:layout_marginTop="39dp"
-        android:layout_below="@+id/itemEvoCodeTextView"
+        android:layout_below="@+id/itemEvoCodeEditText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textStyle="bold"/>
 
-    <TextView
+    <EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/itemShortDescriptionTextView"
+        android:id="@+id/itemShortDescriptionEditText"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/description" />
+        android:layout_below="@+id/description"
+        android:editable="true"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -48,19 +50,20 @@
         android:text="Stock"
         android:id="@+id/stock"
         android:layout_marginTop="59dp"
-        android:layout_below="@+id/itemShortDescriptionTextView"
+        android:layout_below="@+id/itemShortDescriptionEditText"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textStyle="bold"/>
 
-    <TextView
+    <EditText
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/itemQuantityTextView"
+        android:id="@+id/itemQuantityEditText"
         android:layout_below="@+id/stock"
-        android:layout_alignRight="@+id/itemShortDescriptionTextView"
-        android:layout_alignEnd="@+id/itemShortDescriptionTextView" />
+        android:layout_alignRight="@+id/itemShortDescriptionEditText"
+        android:layout_alignEnd="@+id/itemShortDescriptionEditText"
+        android:editable="true"/>
 
  <!--   <Button
         android:layout_width="wrap_content"

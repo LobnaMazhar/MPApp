@@ -31,6 +31,7 @@ public class itemsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_items);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Items");
         setSupportActionBar(toolbar);
 
         getItems();
@@ -64,7 +65,10 @@ public class itemsActivity extends AppCompatActivity {
 
                     itemsList.setOnTouchListener(new OnSwipeTouchListener(itemsActivity.this,itemsList){
                         public void onSwipeLeft(int pos) {
-                            deleteItem();
+                            try{
+                                deleteItem(reader.getJSONObject(pos).getInt("itemID"));
+                            }catch (JSONException e){
+                            }
                         }
                     });
 
@@ -94,7 +98,7 @@ public class itemsActivity extends AppCompatActivity {
         conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getItems");
     }
 
-    public void deleteItem(){
+    public void deleteItem(final int itemID){
         //Put up the Yes/No message box
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Delete item");
@@ -103,7 +107,7 @@ public class itemsActivity extends AppCompatActivity {
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 HashMap<String, String> params = new HashMap<String, String>();
-                params.put("itemID", Integer.toString(getIntent().getExtras().getInt("itemID")));
+                params.put("itemID", Integer.toString(itemID));
                 Connection conn = new Connection(params, new ConnectionPostListener() {
                     @Override
                     public void doSomething(String result) {
@@ -113,8 +117,10 @@ public class itemsActivity extends AppCompatActivity {
                                 Toast.makeText(itemsActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(itemsActivity.this, itemsActivity.class);
                                 startActivity(intent);
+                                finish();
                             }
                         }catch (JSONException e){
+                            Toast.makeText(itemsActivity.this, "Can't be deleted", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
