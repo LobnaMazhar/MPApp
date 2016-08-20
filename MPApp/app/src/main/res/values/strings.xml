@@ -1,9 +1,18 @@
 <resources>
     <string name="app_name">MPApp</string>
     <string name="title_activity_home">homeActivity</string>
-    <string name="title_activity_scenarios">ScenariosActivity</string>
     <string name="title_activity_items">itemsActivity</string>
     <string name="title_activity_technical_plans">technicalPlansActivity</string>
     <string name="title_activity_add_user">addUserActivity</string>
     <string name="title_activity_item_view">itemViewActivity</string>
+    <string name="title_activity_reports">reportsActivity</string>
+    <string name="title_activity_file_chooser">fileChooserActivity</string>
+    <string name="title_activity_rollout">rolloutActivity</string>
+    <string name="title_activity_technical_plan_view">technicalPlanViewActivity</string>
+    <string name="title_activity_scenarios">scenariosActivity</string>
+    <string name="title_activity_scenario_view">scenarioViewActivity</string>
+    <string name="title_activity_add_scenario">addScenarioActivity</string>
+    <string name="title_activity_add_technical_plan">addTechnicalPlanActivity</string>
+    <string name="title_activity_add_item">addItemActivity</string>
+    <string name="title_activity_add_items_to_scenario">addItemsToScenarioActivity</string>
 </resources>

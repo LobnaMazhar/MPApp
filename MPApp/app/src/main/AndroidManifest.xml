@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -24,10 +26,6 @@
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ScenariosActivity"
-            android:label="@string/title_activity_scenarios"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".itemsActivity"
             android:label="@string/title_activity_items"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -42,6 +40,46 @@
         <activity
             android:name=".itemViewActivity"
             android:label="@string/title_activity_item_view"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".reportsActivity"
+            android:label="@string/title_activity_reports"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".fileChooserActivity"
+            android:label="@string/title_activity_file_chooser"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".rolloutActivity"
+            android:label="@string/title_activity_rollout"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".technicalPlanViewActivity"
+            android:label="@string/title_activity_technical_plan_view"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".scenariosActivity"
+            android:label="@string/title_activity_scenarios"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".scenarioViewActivity"
+            android:label="@string/title_activity_scenario_view"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".addScenarioActivity"
+            android:label="@string/title_activity_add_scenario"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".addTechnicalPlanActivity"
+            android:label="@string/title_activity_add_technical_plan"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".addItemActivity"
+            android:label="@string/title_activity_add_item"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".addItemsToScenarioActivity"
+            android:label="@string/title_activity_add_items_to_scenario"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

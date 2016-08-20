@@ -31,8 +31,8 @@ public class itemAdapter extends ArrayAdapter<item> {
         View itemListView = inflater.inflate(R.layout.itemslist_row, parent, false);
 
         item itemObject = items.get(position);
-        TextView itemListItemEvoCodeTextView = (TextView) itemListView.findViewById(R.id.itemListItemEvoCodeTextView);
-        itemListItemEvoCodeTextView.setText(itemObject.getItemEvoCode());
+        TextView itemListItemShortDescriptionTextView = (TextView) itemListView.findViewById(R.id.itemListItemShortDescriptionTextView);
+        itemListItemShortDescriptionTextView.setText(itemObject.getItemShortDescription());
         TextView itemListItemQuantityTextView = (TextView) itemListView.findViewById(R.id.itemListItemQuantityTextView);
         itemListItemQuantityTextView.setText(Integer.toString(itemObject.getItemQuantity()));
 

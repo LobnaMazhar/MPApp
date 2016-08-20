@@ -23,4 +23,15 @@ public class homeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void technicalPlans(View view){
+        Intent intent = new Intent(homeActivity.this, technicalPlansActivity.class);
+        startActivity(intent);
+    }
+
+    public void reports(View view){
+        Intent intent = new Intent(homeActivity.this, reportsActivity.class);
+        intent.putExtra("filename", "");
+        startActivity(intent);
+    }
+
 }

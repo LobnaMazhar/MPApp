@@ -1,15 +1,18 @@
 package com.materialplanning.vodafone.mpapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,28 +37,111 @@ public class itemViewActivity extends AppCompatActivity {
         itemQuantityTextView.setText(Integer.toString(getIntent().getExtras().getInt("itemQuantity")));
     }
 
+    /*
     public void editItem(View view){
-        Toast.makeText(this, "EDIT NOW", Toast.LENGTH_SHORT).show();
-        // TODO write the code
-    }
-
-    public void deleteItem(View view){
         HashMap<String, String> params = new HashMap<String, String>();
-        params.put("itemID", Integer.toString(getIntent().getExtras().getInt("itemID")));
+
+        String itemID = Integer.toString(getIntent().getExtras().getInt("itemID"));
+        params.put("itemID", itemID);
+
+        TextView itemEvoCodeTextView = (TextView) findViewById(R.id.itemEvoCodeTextView);
+        String itemEvoCode = itemEvoCodeTextView.getText().toString();
+        params.put("itemEvoCode", itemEvoCode);
+
+        TextView itemShortDescriptionTextView = (TextView) findViewById(R.id.itemShortDescriptionTextView);
+        String itemShortDescription = itemShortDescriptionTextView.getText().toString();
+        params.put("itemShortDescription", itemShortDescription);
+
+        TextView itemQuantityTextView = (TextView) findViewById(R.id.itemQuantityTextView);
+        String itemQuantity = itemQuantityTextView.getText().toString();
+        params.put("itemQuantity", itemQuantity);
+
+
         Connection conn = new Connection(params, new ConnectionPostListener() {
             @Override
             public void doSomething(String result) {
                 try {
                     JSONObject reader = new JSONObject(result);
-                    if(reader.getBoolean("deleted")){
-                        Intent intent = new Intent(itemViewActivity.this, itemsActivity.class);
+                    if(reader.getBoolean("Edited")){
+                        Intent intent = new Intent(itemViewActivity.this, itemViewActivity.class);
                         startActivity(intent);
+                        finish();
                     }
                 }catch (JSONException e){
                 }
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/deleteItem");
+        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/editItem");
+    }
+    */
+
+    /*
+    public void deleteItem(View view){
+        //Put up the Yes/No message box
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete item");
+        builder.setMessage("Are you sure?");
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("itemID", Integer.toString(getIntent().getExtras().getInt("itemID")));
+                Connection conn = new Connection(params, new ConnectionPostListener() {
+                    @Override
+                    public void doSomething(String result) {
+                        try {
+                            JSONObject reader = new JSONObject(result);
+                            if(reader.getBoolean("deleted")){
+                                Toast.makeText(itemViewActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(itemViewActivity.this, itemsActivity.class);
+                                startActivity(intent);
+                            }
+                        }catch (JSONException e){
+                        }
+                    }
+                });
+                conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/deleteItem");
+            }
+        });
+        builder.setNegativeButton("No", null);
+        builder .show();
+    }
+    */
+
+    public void saveEditedItem(View view){
+        HashMap<String, String> params = new HashMap<String, String>();
+
+        String itemID = Integer.toString(getIntent().getExtras().getInt("itemID"));
+        params.put("itemID", itemID);
+
+        TextView itemEvoCodeTextView = (TextView) findViewById(R.id.itemEvoCodeTextView);
+        String itemEvoCode = itemEvoCodeTextView.getText().toString();
+        params.put("itemEvoCode", itemEvoCode);
+
+        TextView itemShortDescriptionTextView = (TextView) findViewById(R.id.itemShortDescriptionTextView);
+        String itemShortDescription = itemShortDescriptionTextView.getText().toString();
+        params.put("itemShortDescription", itemShortDescription);
+
+        TextView itemQuantityTextView = (TextView) findViewById(R.id.itemQuantityTextView);
+        String itemQuantity = itemQuantityTextView.getText().toString();
+        params.put("itemQuantity", itemQuantity);
+
+
+        Connection conn = new Connection(params, new ConnectionPostListener() {
+            @Override
+            public void doSomething(String result) {
+                try {
+                    JSONObject reader = new JSONObject(result);
+                    if(reader.getBoolean("Edited")){
+                        Intent intent = new Intent(itemViewActivity.this, itemViewActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }catch (JSONException e){
+                }
+            }
+        });
+        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/editItem");
     }
 
 }

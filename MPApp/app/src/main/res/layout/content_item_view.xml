@@ -18,7 +18,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:id="@+id/itemEvoCodeTextView"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -29,7 +29,8 @@
         android:layout_marginTop="39dp"
         android:layout_below="@+id/itemEvoCodeTextView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textStyle="bold"/>
 
     <TextView
         android:layout_width="fill_parent"
@@ -44,64 +45,44 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Quantity"
-        android:id="@+id/quantity"
-        android:layout_marginTop="41dp"
+        android:text="Stock"
+        android:id="@+id/stock"
+        android:layout_marginTop="59dp"
         android:layout_below="@+id/itemShortDescriptionTextView"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textStyle="bold"/>
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/itemQuantityTextView"
-        android:layout_below="@+id/quantity"
+        android:layout_below="@+id/stock"
         android:layout_alignRight="@+id/itemShortDescriptionTextView"
         android:layout_alignEnd="@+id/itemShortDescriptionTextView" />
 
-    <Button
+ <!--   <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Edit"
         android:id="@+id/editItemButton"
-        android:layout_marginTop="58dp"
+        android:layout_marginTop="100dp"
         android:onClick="editItem"
-        android:layout_below="@+id/itemPriceTextView"
-        android:layout_toRightOf="@+id/price"
-        android:layout_toEndOf="@+id/price" />
+        android:layout_below="@+id/itemQuantityTextView"
+        android:layout_toRightOf="@+id/stock"
+        android:layout_toEndOf="@+id/stock" /> -->
 
-    <Button
+   <!-- <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Delete"
         android:id="@+id/deleteItemButton"
         android:onClick="deleteItem"
         android:layout_alignTop="@+id/editItemButton"
-        android:layout_alignRight="@+id/itemPriceTextView"
-        android:layout_alignEnd="@+id/itemPriceTextView"
         android:layout_marginRight="35dp"
-        android:layout_marginEnd="35dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Price"
-        android:id="@+id/price"
-        android:layout_centerVertical="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:id="@+id/itemPriceTextView"
-        android:layout_below="@+id/price"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_marginEnd="35dp"
         android:layout_alignRight="@+id/itemQuantityTextView"
-        android:layout_alignEnd="@+id/itemQuantityTextView" />
+        android:layout_alignEnd="@+id/itemQuantityTextView" /> -->
 
 </RelativeLayout>

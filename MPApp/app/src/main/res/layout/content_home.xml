@@ -44,7 +44,8 @@
         android:background="@drawable/reports"
         android:layout_alignTop="@+id/technicalPlansImageButton"
         android:layout_alignLeft="@+id/scenariosImageButton"
-        android:layout_alignStart="@+id/scenariosImageButton" />
+        android:layout_alignStart="@+id/scenariosImageButton"
+        android:onClick="reports" />
 
     <ImageButton
         android:layout_width="wrap_content"
@@ -54,7 +55,8 @@
         android:layout_below="@+id/itemsListImageButton"
         android:layout_alignLeft="@+id/itemsListImageButton"
         android:layout_alignStart="@+id/itemsListImageButton"
-        android:layout_marginTop="119dp" />
+        android:layout_marginTop="119dp"
+        android:onClick="technicalPlans" />
 
     <TextView
         android:layout_width="wrap_content"

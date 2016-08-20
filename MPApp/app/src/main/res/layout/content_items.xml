@@ -20,7 +20,7 @@
         android:layout_alignParentStart="false"
         android:divider="@color/colorPrimary"
         android:dividerHeight="1dp"
-        android:layout_below="@+id/evoCode"
+        android:layout_below="@+id/description"
         android:contextClickable="false"
         android:layout_marginTop="10dp" />
 
@@ -28,20 +28,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Evocode"
-        android:id="@+id/evoCode"
+        android:text="Short description"
+        android:id="@+id/description"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:textStyle="bold"
-        android:layout_alignBottom="@+id/quantity" />
+        android:layout_alignBottom="@+id/stock" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Quantity"
-        android:id="@+id/quantity"
+        android:text="Stock"
+        android:id="@+id/stock"
         android:layout_alignParentTop="true"
         android:layout_alignRight="@+id/itemsListView"
         android:layout_alignEnd="@+id/itemsListView"

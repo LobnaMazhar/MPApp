@@ -22,7 +22,9 @@ public class loginActivity extends AppCompatActivity {
     }
 
     public void login(View view){
-
+        startActivity(new Intent(loginActivity.this, homeActivity.class));
+        // TODO delete above line and uncomment the next block
+/*
         HashMap<String, String> params = new HashMap<String, String>();
 
         EditText usernameText = (EditText) findViewById(R.id.loginUsernameTextField);
@@ -50,6 +52,7 @@ public class loginActivity extends AppCompatActivity {
                     intent.putExtra("userID", reader.getInt("userID"));
                     intent.putExtra("userName", reader.getString("userName"));
                     startActivity(intent);
+                    finish();
                 } catch (JSONException e) {
                    Toast.makeText(loginActivity.this, "Invalid username or password", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
@@ -57,6 +60,6 @@ public class loginActivity extends AppCompatActivity {
 
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/login");
+        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/login");*/
     }
 }

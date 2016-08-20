@@ -12,11 +12,19 @@ public class item {
     public item(){
     }
 
+    public int getItemID(){
+        return itemID;
+    }
+
     public String getItemEvoCode(){
         return itemEvoCode;
     }
 
     public int getItemQuantity(){
         return itemQuantity;
+    }
+
+    public String getItemShortDescription(){
+        return itemShortDescription;
     }
 }

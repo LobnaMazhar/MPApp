@@ -1,9 +1,12 @@
 package com.materialplanning.vodafone.mpapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -59,13 +62,18 @@ public class itemsActivity extends AppCompatActivity {
                     ListView itemsList = (ListView) findViewById(R.id.itemsListView);
                     itemsList.setAdapter(itemListAdapter);
 
+                    itemsList.setOnTouchListener(new OnSwipeTouchListener(itemsActivity.this,itemsList){
+                        public void onSwipeLeft(int pos) {
+                            deleteItem();
+                        }
+                    });
+
                     // On item click listener
                     itemsList.setOnItemClickListener(
                             new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                     try{
-
                                        Intent goToItem = new Intent(itemsActivity.this, itemViewActivity.class);
 
                                         goToItem.putExtra("itemID", reader.getJSONObject(position).getInt("itemID"));
@@ -74,17 +82,51 @@ public class itemsActivity extends AppCompatActivity {
                                         goToItem.putExtra("itemQuantity", reader.getJSONObject(position).getInt("itemQuantity"));
 
                                         startActivity(goToItem);
-
                                     }
                                     catch (JSONException e){}
                                 }
                             }
                     );
-
                 } catch (JSONException e) {
                 }
             }
         });
         conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getItems");
+    }
+
+    public void deleteItem(){
+        //Put up the Yes/No message box
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Delete item");
+        builder.setMessage("Are you sure?");
+        builder.setIcon(android.R.drawable.ic_dialog_alert);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                HashMap<String, String> params = new HashMap<String, String>();
+                params.put("itemID", Integer.toString(getIntent().getExtras().getInt("itemID")));
+                Connection conn = new Connection(params, new ConnectionPostListener() {
+                    @Override
+                    public void doSomething(String result) {
+                        try {
+                            JSONObject reader = new JSONObject(result);
+                            if(reader.getBoolean("deleted")){
+                                Toast.makeText(itemsActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(itemsActivity.this, itemsActivity.class);
+                                startActivity(intent);
+                            }
+                        }catch (JSONException e){
+                        }
+                    }
+                });
+                conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/deleteItem");
+            }
+        });
+        builder.setNegativeButton("No", null);
+        builder .show();
+    }
+
+    public void addItem(View view){
+        Intent intent = new Intent(this, addItemActivity.class);
+        startActivity(intent);
     }
 }
