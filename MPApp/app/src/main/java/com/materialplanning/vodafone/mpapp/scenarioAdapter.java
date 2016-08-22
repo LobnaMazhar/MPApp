@@ -32,7 +32,7 @@ public class scenarioAdapter extends ArrayAdapter<scenario> {
         scenario scenarioObject = scenarios.get(position);
 
         TextView scenariosListNumberTextView = (TextView) scenariosList.findViewById(R.id.scenariosListNumberTextView);
-        scenariosListNumberTextView.setText(scenarioObject.getScenarioNumber());
+        scenariosListNumberTextView.setText(Integer.toString(scenarioObject.getScenarioNumber()));
 
         return scenariosList;
     }

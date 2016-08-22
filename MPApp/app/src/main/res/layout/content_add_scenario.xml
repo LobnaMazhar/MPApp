@@ -51,4 +51,13 @@
         android:layout_alignRight="@+id/addScenarioNumberEditText"
         android:layout_alignEnd="@+id/addScenarioNumberEditText"
         android:textColor="@color/vodafoneRed"/>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="375dp"
+        android:id="@+id/addItemsToScenarioItemsListView"
+        android:layout_below="@+id/errorNumberAlreadyExistsTextView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:visibility="invisible"/>
 </RelativeLayout>

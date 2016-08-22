@@ -30,6 +30,9 @@ public class addItemsToScenarioActivity extends AppCompatActivity {
 
         selectedItemsIDs = new ArrayList<Integer>();
         showItemsToSelectFrom(selectedItemsIDs);
+
+        ListView addItemsToScenarioItemsListView = (ListView) findViewById(R.id.addItemsToScenarioItemsListView);
+        addItemsToScenarioItemsListView.setVisibility(View.VISIBLE);
     }
 
     public void showItemsToSelectFrom(final ArrayList<Integer> selectedItemsIDs){

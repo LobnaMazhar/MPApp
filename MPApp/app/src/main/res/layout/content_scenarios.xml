@@ -24,11 +24,12 @@
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="410dp"
         android:id="@+id/scenariosListView"
-        android:layout_below="@+id/scenarioNumber"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:divider="@color/colorPrimary"
-        android:dividerHeight="1dp" />
+        android:dividerHeight="1dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/scenarioNumber"
+        android:layout_marginTop="5dp" />
 </RelativeLayout>

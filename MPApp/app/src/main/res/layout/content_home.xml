@@ -35,7 +35,8 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="35dp"
         android:layout_marginEnd="35dp"
-        android:background="@drawable/scenario" />
+        android:background="@drawable/scenario"
+        android:onClick="scenarios" />
 
     <ImageButton
         android:layout_width="wrap_content"
