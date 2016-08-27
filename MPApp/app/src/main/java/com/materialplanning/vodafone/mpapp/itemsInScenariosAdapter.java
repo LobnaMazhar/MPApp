@@ -28,13 +28,13 @@ public class itemsInScenariosAdapter extends ArrayAdapter<itemInScenario> {
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
         //LayoutInflater inflater = LayoutInflater.from(getContext());
 
-        View itemsInScenarioListView = inflater.inflate(R.layout.itemslist_row, parent, false);
+        View itemsInScenarioListView = inflater.inflate(R.layout.itemsinscenarioslist_row, parent, false);
 
         itemInScenario itemInScenarioObject = itemsInScenario.get(position);
         TextView itemInScenarioItemShortDescriptionTextView = (TextView) itemsInScenarioListView.findViewById(R.id.itemInScenarioItemShortDescriptionTextView);
-        itemInScenarioItemShortDescriptionTextView.setText(itemInScenarioObject.itemInScenarioItemID); // TODO bdl ID yb2a l Short desc
+        itemInScenarioItemShortDescriptionTextView.setText(itemInScenarioObject.getitemInScenarioItemShortDescription());
         TextView itemInScenarioItemQuantityTextView = (TextView) itemsInScenarioListView.findViewById(R.id.itemInScenarioItemQuantityTextView);
-        itemInScenarioItemQuantityTextView.setText(Integer.toString(itemInScenarioObject.itemInScenarioItemQuantity));
+        itemInScenarioItemQuantityTextView.setText(Integer.toString(itemInScenarioObject.getitemInScenarioItemQuantity()));
 
         return itemsInScenarioListView;
     }

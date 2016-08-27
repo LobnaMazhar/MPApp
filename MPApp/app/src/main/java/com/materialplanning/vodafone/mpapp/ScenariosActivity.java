@@ -27,6 +27,7 @@ public class scenariosActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scenarios);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Scenarios");
         setSupportActionBar(toolbar);
@@ -106,7 +107,7 @@ public class scenariosActivity extends AppCompatActivity {
                         try {
                             JSONObject reader = new JSONObject(result);
                             if(reader.getBoolean("deleted")){
-                                Toast.makeText(scenariosActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(scenariosActivity.this, "Scenario has been deleted", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(scenariosActivity.this, scenariosActivity.class);
                                 startActivity(intent);
                                 finish();

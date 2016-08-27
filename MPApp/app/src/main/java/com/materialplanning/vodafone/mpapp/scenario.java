@@ -10,4 +10,8 @@ public class scenario {
     public int getScenarioNumber(){
         return scenarioNumber;
     }
+
+    public int getScenarioID(){
+        return scenarioID;
+    }
 }

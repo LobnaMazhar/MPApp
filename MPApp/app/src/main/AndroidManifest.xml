@@ -30,7 +30,7 @@
             android:label="@string/title_activity_items"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".technicalPlansActivity"
+            android:name=".projectsActivity"
             android:label="@string/title_activity_technical_plans"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -54,7 +54,7 @@
             android:label="@string/title_activity_rollout"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".technicalPlanViewActivity"
+            android:name=".projectViewActivity"
             android:label="@string/title_activity_technical_plan_view"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -70,7 +70,7 @@
             android:label="@string/title_activity_add_scenario"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".addTechnicalPlanActivity"
+            android:name=".addProjectActivity"
             android:label="@string/title_activity_add_technical_plan"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -80,6 +80,22 @@
         <activity
             android:name=".addItemsToScenarioActivity"
             android:label="@string/title_activity_add_items_to_scenario"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".technicalPlansActivity"
+            android:label="@string/title_activity_technical_plans"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".addProjectToTechnicalPlanActivity"
+            android:label="@string/title_activity_add_project_to_technical_plan"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".prvViewActivity"
+            android:label="@string/title_activity_prv_view"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".billOfMaterialActivity"
+            android:label="@string/title_activity_bill_of_material"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

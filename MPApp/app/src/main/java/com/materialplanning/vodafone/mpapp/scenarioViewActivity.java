@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.text.Layout;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,10 +35,8 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 public class scenarioViewActivity extends AppCompatActivity {
-
     int projectID = 0;
     ArrayList<Integer> selectedItemsIDs;
-    final ArrayList<itemInScenario> itemsInScenariosList = new ArrayList<itemInScenario>();
     ArrayList<Integer> itemsInScenariosIDsList = new ArrayList<Integer>();
     private String m_Text = "";
 
@@ -44,6 +44,10 @@ public class scenarioViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scenario_view);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(Integer.toString(getIntent().getExtras().getInt("scenarioNumber")));
+        setSupportActionBar(toolbar);
 
         getScenarioNumber();
         getProjectName();
@@ -102,7 +106,9 @@ public class scenarioViewActivity extends AppCompatActivity {
     }
 
     public void getItemsInScenario() {
+        final ArrayList<itemInScenario> itemsInScenariosList = new ArrayList<itemInScenario>();
         HashMap<String, String> params = new HashMap<String, String>();
+        params.put("scenarioID", Integer.toString(getIntent().getExtras().getInt("scenarioID")));
         Connection conn = new Connection(params, new ConnectionPostListener() {
             @Override
             public void doSomething(String result) {
@@ -117,6 +123,7 @@ public class scenarioViewActivity extends AppCompatActivity {
                         itemInScenarioObject.itemInScenarioItemID = data.getInt("itemInScenarioItemID");
                         itemInScenarioObject.itemInScenarioScenarioID = data.getInt("itemInScenarioScenarioID");
                         itemInScenarioObject.itemInScenarioItemQuantity = data.getInt("itemInScenarioItemQuantity");
+                        itemInScenarioObject.itemInScenarioItemShortDescription = data.getString("itemInScenarioItemShortDescription");
 
                         itemsInScenariosList.add(itemInScenarioObject);
                         itemsInScenariosIDsList.add(data.getInt("itemInScenarioItemID")); // 3shan ynf3 y3ml check 3la l IDs elly tzhr fl addNewItems
@@ -127,40 +134,6 @@ public class scenarioViewActivity extends AppCompatActivity {
                     final ListView itemsInScenarioListView = (ListView) findViewById(R.id.itemsInScenarioListView);
                     itemsInScenarioListView.setAdapter(itemsInScenariosAdapterListAdapter);
 
-                    // On item click listener
-                 /*   itemsInScenarioListView.setOnItemClickListener(
-                            new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    try {
-                                        HashMap<String, String> params = new HashMap<String, String>();
-                                        params.put("itemID", Integer.toString(reader.getJSONObject(position).getInt("itemInScenarioItemID")));
-
-                                        Connection conn = new Connection(params, new ConnectionPostListener() {
-                                            @Override
-                                            public void doSomething(String result) {
-                                                try{
-                                                    JSONObject reader = new JSONObject(result);
-
-                                                    Intent goToItem = new Intent(scenarioViewActivity.this, itemViewActivity.class);
-
-                                                    goToItem.putExtra("itemID", reader.getInt("itemID"));
-                                                    goToItem.putExtra("itemEvoCode", reader.getString("itemEvoCode"));
-                                                    goToItem.putExtra("itemShortDescription", reader.getString("itemShortDescription"));
-                                                    goToItem.putExtra("itemQuantity", reader.getInt("itemQuantity"));
-
-                                                    startActivity(goToItem);
-                                                }catch(JSONException e){
-                                                }
-                                            }
-                                        });
-                                        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getItem");
-                                    } catch (Exception e) {
-                                    }
-                                }
-                            }
-                    ); */
-
 
                     // Select items from the list to be (edited(list)=deleted(items))
                     final ArrayList<Integer> selectedItems = new ArrayList<Integer>();
@@ -170,9 +143,11 @@ public class scenarioViewActivity extends AppCompatActivity {
                         public void onItemCheckedStateChanged(ActionMode actionMode, int position, long id, boolean checked) {
                             if (checked) {
                                 selectedItems.add(itemsInScenariosList.get(position).getitemInScenarioItemID());
-                                actionMode.setTitle(selectedItems.size() + " items selected.");
+                            }else{
+                                int indexToRemove = selectedItems.indexOf(itemsInScenariosList.get(position).getitemInScenarioItemID());
+                                selectedItems.remove(indexToRemove);
                             }
-
+                            actionMode.setTitle(selectedItems.size() + " items selected.");
                         }
 
                         @Override
@@ -190,7 +165,7 @@ public class scenarioViewActivity extends AppCompatActivity {
                         @Override
                         public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
                             switch (menuItem.getItemId()) {
-                                case R.id.deleteItemsFromScenarioItemID:
+                                case R.id.delete:
                                     deleteItems(selectedItems);
                                     actionMode.finish();
                                     return true;
@@ -209,7 +184,7 @@ public class scenarioViewActivity extends AppCompatActivity {
                     itemsInScenarioListView.setOnItemClickListener(
                             new AdapterView.OnItemClickListener() {
                                 @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                                     try {
                                         AlertDialog.Builder builder = new AlertDialog.Builder(scenarioViewActivity.this);
                                         builder.setTitle("Item quantity");
@@ -225,7 +200,22 @@ public class scenarioViewActivity extends AppCompatActivity {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
                                                 Toast.makeText(scenarioViewActivity.this, input.getText().toString(), Toast.LENGTH_LONG).show();
-                                                // TODO lw l toast tl3 hna yb2a hndh service b2a w azbt fn editQ
+                                                HashMap<String, String> params = new HashMap<String, String>();
+                                                params.put("ItemQuantity", input.getText().toString());
+                                                params.put("itemInScenarioID",Integer.toString(itemsInScenariosList.get(position).getitemInScenarioID()));
+
+                                                Connection connection = new Connection(params, new ConnectionPostListener() {
+                                                    @Override
+                                                    public void doSomething(String result) {
+                                                        try{
+                                                            JSONObject reader = new JSONObject(result);
+                                                            if(reader.getBoolean("edited"))
+                                                                Toast.makeText(scenarioViewActivity.this, "Quantity is edited", Toast.LENGTH_SHORT).show();
+                                                        }catch (JSONException e){
+                                                        }
+                                                    }
+                                                });
+                                                connection.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/editItemQuantityInScenario");
                                             }
                                         });
                                         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -235,8 +225,6 @@ public class scenarioViewActivity extends AppCompatActivity {
                                             }
                                         });
                                         builder.show();
-                                        //TODO on click yft7 dialog box fe l evocode w esm l item w l Q bt3tha hna w mmkn y3dlu b2a w fe save btn
-                                        // TODO kda ams7 onClick ely fo2
                                     } catch (Exception e) {
                                     }
                                 }
@@ -249,7 +237,6 @@ public class scenarioViewActivity extends AppCompatActivity {
     }
 
     public void editScenario(View view){
-        // TODO y-edit l quantity bta3t item mo3yn
         HashMap<String,String> params = new HashMap<String, String>();
 
         String scenarioID = Integer.toString(getIntent().getExtras().getInt("scenarioID"));
@@ -273,7 +260,7 @@ public class scenarioViewActivity extends AppCompatActivity {
 
 
         // Add items to the scenario using scenarioID sent with the intent
-        addItemsToScenario();
+        //addItemsToScenario();
 
 
         Toast.makeText(scenarioViewActivity.this, "Scenario has been edited", Toast.LENGTH_SHORT).show();
@@ -281,26 +268,38 @@ public class scenarioViewActivity extends AppCompatActivity {
 
     public void deleteItems(final ArrayList<Integer> selectedItemsToDelete) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Delete item from scenario");
-        builder.setMessage("Are you sure?");
+        builder.setTitle("Delete item(s) from scenario");
+        builder.setMessage("Are you sure you want to delete " + selectedItemsToDelete.size() + " items?");
         builder.setIcon(android.R.drawable.ic_dialog_alert);
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                HashMap<String, String> params = new HashMap<String, String>();
-                params.put("selectedItemsIDs", selectedItemsToDelete.toString());
+                for(int i=0; i<selectedItemsToDelete.size(); ++i) {
+                    // Remove items checked to be deleted from the list of the items in the scenarios so they can appear back while choosing items to add
+                    int indexToRemove = itemsInScenariosIDsList.indexOf(selectedItemsToDelete.get(i));
+                    itemsInScenariosIDsList.remove(indexToRemove);
 
-                Connection conn = new Connection(params, new ConnectionPostListener() {
-                    @Override
-                    public void doSomething(String result) {
-                        try {
-                            JSONObject reader = new JSONObject(result);
-                            if (reader.getBoolean("deleted"))
-                                Toast.makeText(scenarioViewActivity.this, selectedItemsToDelete.size() + " items deleted.", Toast.LENGTH_LONG).show();
-                        } catch (JSONException e) {
+                    HashMap<String, String> params = new HashMap<String, String>();
+                    params.put("itemID", selectedItemsToDelete.get(i).toString());
+                    params.put("scenarioID", Integer.toString(getIntent().getExtras().getInt("scenarioID")));
+
+                    Connection conn = new Connection(params, new ConnectionPostListener() {
+                        @Override
+                        public void doSomething(String result) {
+                            try {
+                                JSONObject reader = new JSONObject(result);
+                            } catch (JSONException e) {
+                            }
                         }
-                    }
-                });
-                conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/deleteItemsFromScenario");
+                    });
+                    conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/deleteItemFromScenario");
+                }
+                Toast.makeText(scenarioViewActivity.this, selectedItemsToDelete.size() + " items deleted.", Toast.LENGTH_LONG).show();
+
+                Intent goToScenario = new Intent(scenarioViewActivity.this, scenarioViewActivity.class);
+                goToScenario.putExtra("scenarioID", getIntent().getExtras().getInt("scenarioID"));
+                goToScenario.putExtra("scenarioNumber", getIntent().getExtras().getInt("scenarioNumber"));
+                startActivity(goToScenario);
+                finish();
             }
         });
         builder.setNegativeButton("No", null);
@@ -331,27 +330,55 @@ public class scenarioViewActivity extends AppCompatActivity {
                             itemList.add(itemObject);
                     }
 
-                    ArrayAdapter<item> itemListAdapter = new itemAdapter(scenarioViewActivity.this, itemList);
-                    // Connect list and adapter
                     ListView itemsInScenarioListView = (ListView) findViewById(R.id.itemsInScenarioListView);
                     itemsInScenarioListView.setVisibility(View.INVISIBLE);
                     ListView addItemsToScenarioItemsListView = (ListView) findViewById(R.id.addItemsToScenarioItemsListView);
                     addItemsToScenarioItemsListView.setVisibility(View.VISIBLE);
-                    addItemsToScenarioItemsListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+
+                    // Connect list and adapter
+                    ArrayAdapter<item> itemListAdapter = new itemAdapter(scenarioViewActivity.this, itemList);
                     addItemsToScenarioItemsListView.setAdapter(itemListAdapter);
 
-                    addItemsToScenarioItemsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    final ArrayList<Integer> selectedItems = new ArrayList<Integer>();
+                    addItemsToScenarioItemsListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+                    addItemsToScenarioItemsListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
                         @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                            view.setSelected(true); // 3shan l selected items ybanu ,, TODO hal s7 kda wla a
-                            try {
-                                int selectedItemID = reader.getJSONObject(position).getInt("itemID");
-                                if (selectedItemsIDs.contains(selectedItemID))
-                                    selectedItemsIDs.remove(selectedItemID);
-                                else
-                                    selectedItemsIDs.add(selectedItemID);
-                            } catch (JSONException e) {
+                        public void onItemCheckedStateChanged(ActionMode actionMode, int position, long id, boolean checked) {
+                            if (checked) {
+                                selectedItems.add(itemList.get(position).getItemID());
+                            }else{
+                                int indexToRemove = selectedItems.indexOf(itemList.get(position).getItemID());
+                                selectedItems.remove(indexToRemove);
                             }
+                            actionMode.setTitle(selectedItems.size() + " items selected.");
+                        }
+
+                        @Override
+                        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+                            MenuInflater inflater = actionMode.getMenuInflater();
+                            inflater.inflate(R.menu.context_add, menu);
+                            return true;
+                        }
+
+                        @Override
+                        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+                            switch (menuItem.getItemId()) {
+                                case R.id.add:
+                                    addItemsToScenario(selectedItems);
+                                    actionMode.finish();
+                                    return true;
+                                default:
+                                    return false;
+                            }
+                        }
+
+                        @Override
+                        public void onDestroyActionMode(ActionMode actionMode) {
                         }
                     });
                 } catch (JSONException e) {
@@ -361,12 +388,11 @@ public class scenarioViewActivity extends AppCompatActivity {
         conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getItems");
     }
 
-    public void addItemsToScenario() {
-        HashMap<String, String> params = new HashMap<String, String>();
-        for(int i=0; i<selectedItemsIDs.size(); ++i){
-            params.clear();
+    public void addItemsToScenario(final ArrayList<Integer> selectedItemsToAdd) {
+        for(int i=0; i<selectedItemsToAdd.size(); ++i) {
+            HashMap<String, String> params = new HashMap<String, String>();
 
-            params.put("itemID", selectedItemsIDs.get(i).toString());
+            params.put("itemID", Integer.toString(selectedItemsToAdd.get(i)));
             params.put("scenarioID", Integer.toString(getIntent().getExtras().getInt("scenarioID")));
 
             Connection conn = new Connection(params, new ConnectionPostListener() {
@@ -378,7 +404,14 @@ public class scenarioViewActivity extends AppCompatActivity {
                     }
                 }
             });
-            conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/addItemsToScenario");
+            conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/addItemToScenario");
         }
+            Toast.makeText(scenarioViewActivity.this, Integer.toString(selectedItemsToAdd.size()) + " items added to scenario number " + Integer.toString(getIntent().getExtras().getInt("scenarioNumber")), Toast.LENGTH_LONG).show();
+
+            Intent intent = new Intent(scenarioViewActivity.this, scenarioViewActivity.class);
+            intent.putExtra("scenarioID", getIntent().getExtras().getInt("scenarioID"));
+            intent.putExtra("scenarioNumber", getIntent().getExtras().getInt("scenarioNumber"));
+            startActivity(intent);
+            finish();
     }
 }

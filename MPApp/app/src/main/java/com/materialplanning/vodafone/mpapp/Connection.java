@@ -22,6 +22,7 @@ import java.util.Iterator;
  * Created by Lobna on 10-Aug-16.
  */
 public class Connection extends AsyncTask<String, String, String> {
+    String URL = "http://mpapp-radionetwork.rhcloud.com/MPApp/rest";
     private HashMap<String, String> mData = null;// post data
     private ConnectionPostListener connectionPostListener;
     /**

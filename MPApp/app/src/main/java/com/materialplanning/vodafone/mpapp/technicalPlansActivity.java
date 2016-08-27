@@ -2,8 +2,6 @@ package com.materialplanning.vodafone.mpapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -25,11 +23,15 @@ public class technicalPlansActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_technical_plans);
 
-        getTechnicalPlans();
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Technical plan");
+        setSupportActionBar(toolbar);
+
+        getPRVs();
     }
 
-    public void getTechnicalPlans(){
-        final ArrayList<technicalPlans> technicalPlansList = new ArrayList<technicalPlans>();
+    public void getPRVs(){
+        final ArrayList<prv> prvsList = new ArrayList<prv>();
         HashMap<String, String> params = new HashMap<String, String>();
         Connection conn = new Connection(params, new ConnectionPostListener() {
             @Override
@@ -39,48 +41,47 @@ public class technicalPlansActivity extends AppCompatActivity {
                     for (int i = 0; i < reader.length(); ++i) {
                         JSONObject data = reader.getJSONObject(i);
 
-                        technicalPlans technicalPlansObject = new technicalPlans();
+                        prv prvObject = new prv();
 
-                        technicalPlansObject.technicalPlanName = data.getString("technicalPlanName");
+                        prvObject.prvID = data.getInt("prvID");
+                        prvObject.prvProjectID = data.getInt("prvProjectID");
+                        prvObject.prvRegionID = data.getInt("prvRegionID");
+                        prvObject.prvVendorID = data.getInt("prvVendorID");
+                        prvObject.prvYearTarget = data.getInt("prvYearTarget");
+                        prvObject.projectName = data.getString("projectName");
 
-                        technicalPlansList.add(technicalPlansObject);
+                        prvsList.add(prvObject);
                     }
 
-                    ArrayAdapter<technicalPlans> technicalPlansListAdapter = new technicalPlansAdapter(technicalPlansActivity.this, technicalPlansList);
+                    ArrayAdapter<prv> prvListAdapter = new prvAdapter(technicalPlansActivity.this, prvsList);
                     // Connect list and adapter
-                    ListView technicalPlansListView = (ListView) findViewById(R.id.technicalPlansListView);
-                    technicalPlansListView.setAdapter(technicalPlansListAdapter);
+                    ListView projectsInTechnicalPlanListView = (ListView) findViewById(R.id.projectsInTechnicalPlanListView);
+                    projectsInTechnicalPlanListView.setAdapter(prvListAdapter);
 
                     // On item click listener
-                    technicalPlansListView.setOnItemClickListener(
+                    projectsInTechnicalPlanListView.setOnItemClickListener(
                             new AdapterView.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                     try{
-
-                                        Intent goToTechnicalPlan = new Intent(technicalPlansActivity.this, technicalPlanViewActivity.class);
-
-                                        goToTechnicalPlan.putExtra("technicalPlanID", reader.getJSONObject(position).getInt("technicalPlanID"));
-                                        goToTechnicalPlan.putExtra("technicalPlanName", reader.getJSONObject(position).getString("technicalPlanName"));
-
-                                        startActivity(goToTechnicalPlan);
-
+                                        Intent goToPRV = new Intent(technicalPlansActivity.this, prvViewActivity.class);
+                                        goToPRV.putExtra("projectID", prvsList.get(position).getPrvProjectID());
+                                        goToPRV.putExtra("projectName", prvsList.get(position).getProjectName());
+                                        startActivity(goToPRV);
                                     }
-                                    catch (JSONException e){}
+                                    catch (Exception e){}
                                 }
                             }
                     );
-
                 } catch (JSONException e) {
                 }
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getTechnicalPlans");
+        conn.execute(conn.URL + "/getPRVs");
     }
 
-    public void addTechnicalPlan(View view){
-        Intent intent = new Intent(this, addTechnicalPlanActivity.class);
+    public void addProject(View view) {
+        Intent intent = new Intent(technicalPlansActivity.this, addProjectToTechnicalPlanActivity.class);
         startActivity(intent);
     }
-
 }

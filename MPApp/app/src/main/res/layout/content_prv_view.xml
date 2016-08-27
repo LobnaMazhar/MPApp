@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.materialplanning.vodafone.mpapp.prvViewActivity"
+    tools:showIn="@layout/activity_prv_view">
+
+    <ExpandableListView
+        android:layout_width="wrap_content"
+        android:layout_height="350dp"
+        android:id="@+id/prvExpandableListView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Total"
+        android:id="@+id/total"
+        android:layout_below="@+id/prvExpandableListView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="29dp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Huawei"
+        android:id="@+id/huawei"
+        android:layout_alignTop="@+id/ericsson"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="  Total"
+        android:id="@+id/total2"
+        android:layout_marginRight="40dp"
+        android:layout_marginEnd="30dp"
+        android:layout_below="@+id/total"
+        android:layout_alignRight="@+id/prvExpandableListView"
+        android:layout_alignEnd="@+id/prvExpandableListView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Ericsson"
+        android:id="@+id/ericsson"
+        android:layout_alignTop="@+id/total2"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/huaweiTotalTextView"
+        android:layout_below="@+id/huawei"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp"
+        android:textAlignment="center"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/ericssonTotalTextView"
+        android:textAlignment="center"
+        android:layout_alignTop="@+id/huaweiTotalTextView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/totalTotalTextView"
+        android:textAlignment="center"
+        android:layout_alignTop="@+id/ericssonTotalTextView"
+        android:layout_alignLeft="@+id/total2"
+        android:layout_alignStart="@+id/total2" />
+
+</RelativeLayout>

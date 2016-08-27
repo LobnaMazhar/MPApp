@@ -98,10 +98,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="Technical plans"
-        android:id="@+id/technicalPlansTextView"
+        android:text="Projects"
+        android:id="@+id/projectsTextView"
         android:layout_alignTop="@+id/reportsTextView"
-        android:layout_alignRight="@+id/technicalPlansImageButton"
-        android:layout_alignEnd="@+id/technicalPlansImageButton" />
+        android:layout_alignLeft="@+id/itemsListTextView"
+        android:layout_alignStart="@+id/itemsListTextView"
+        android:layout_marginLeft="5dp" />
 
 </RelativeLayout>

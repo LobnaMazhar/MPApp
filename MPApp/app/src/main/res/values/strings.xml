@@ -15,4 +15,12 @@
     <string name="title_activity_add_technical_plan">addTechnicalPlanActivity</string>
     <string name="title_activity_add_item">addItemActivity</string>
     <string name="title_activity_add_items_to_scenario">addItemsToScenarioActivity</string>
+    <string name="title_activity_add_project_to_technical_plan">addProjectToTechnicalPlanActivity
+    </string>
+    <string name="title_activity_prv_view">prvViewActivity</string>
+    <string name="title_activity_bill_of_material">billOfMaterialActivity</string>
+    
+    <array name="reports">
+        <item>Technical Plan</item>
+    </array>
 </resources>

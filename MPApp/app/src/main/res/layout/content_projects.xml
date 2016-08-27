@@ -9,37 +9,27 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.materialplanning.vodafone.mpapp.technicalPlanViewActivity"
-    tools:showIn="@layout/activity_technical_plan_view">
-
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/technicalPlanViewNameTextView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:textAlignment="center"/>
+    tools:context=".projectsActivity"
+    tools:showIn="@layout/activity_projects">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Scenario number"
-        android:id="@+id/scenarioNumber"
-        android:layout_marginTop="31dp"
-        android:layout_below="@+id/technicalPlanViewNameTextView"
+        android:text="Project Name"
+        android:id="@+id/projectName"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/scenariosInTechnicalPlanListView"
-        android:layout_below="@+id/scenarioNumber"
+        android:layout_height="410dp"
+        android:id="@+id/projectsListView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_below="@+id/projectName"
+        android:layout_marginTop="5dp"
         android:divider="@color/colorPrimary"
-        android:dividerHeight="1dp" />
+        android:dividerHeight="1dp"/>
 </RelativeLayout>

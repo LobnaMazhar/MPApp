@@ -8,6 +8,7 @@ public class itemInScenario {
     int itemInScenarioItemID;
     int itemInScenarioScenarioID;
     int itemInScenarioItemQuantity;
+    String itemInScenarioItemShortDescription;
 
     public int getitemInScenarioID(){
         return itemInScenarioID;
@@ -23,5 +24,9 @@ public class itemInScenario {
 
     public int getitemInScenarioItemQuantity(){
         return itemInScenarioItemQuantity;
+    }
+
+    public String getitemInScenarioItemShortDescription(){
+        return itemInScenarioItemShortDescription;
     }
 }

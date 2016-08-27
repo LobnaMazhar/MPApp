@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Region"
-        android:id="@+id/region"
+        android:id="@+id/date"
         android:layout_alignTop="@+id/feederFiber"
         android:layout_centerHorizontal="true" />
 
