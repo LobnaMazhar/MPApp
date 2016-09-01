@@ -13,36 +13,38 @@ import java.util.ArrayList;
 /**
  * Created by Lobna on 24-Aug-16.
  */
-public class vendorAdapter extends ArrayAdapter<vendor> {
+public class regionSpinnerAdapter extends ArrayAdapter<region> {
     Context context;
-    ArrayList<vendor> vendors;
+    ArrayList<region> regions;
 
-    public vendorAdapter(Context context, ArrayList<vendor> vendors) {
-        super(context, R.layout.vendorspinner_row, vendors);
+    public regionSpinnerAdapter(Context context, ArrayList<region> regions) {
+        super(context, R.layout.regionspinner_row, regions);
         this.context = context;
-        this.vendors = vendors;
+        this.regions = regions;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
 
-        View vendorsList = inflater.inflate(R.layout.vendorspinner_row, parent, false);
+        View regionsList = inflater.inflate(R.layout.regionspinner_row, parent, false);
 
-        vendor vendorObject = vendors.get(position);
+        region regionObject = regions.get(position);
+        TextView regionNameTextView = (TextView) regionsList.findViewById(R.id.regionNameTextView);
+        regionNameTextView.setText(regionObject.getRegionName());
 
-        return vendorsList;
+        return regionsList;
     }
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
         if(convertView == null){
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.vendorspinner_row, null);
+            convertView = inflater.inflate(R.layout.regionspinner_row, null);
         }
 
-        TextView vendorNameTextView = (TextView) convertView.findViewById(R.id.vendorNameTextView);
-        vendorNameTextView.setText(vendors.get(position).getVendorName());
+        TextView regionNameTextView = (TextView) convertView.findViewById(R.id.regionNameTextView);
+        regionNameTextView.setText(regions.get(position).getRegionName());
 
         return convertView;
     }

@@ -8,6 +8,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -62,7 +63,7 @@ public class scenariosActivity extends AppCompatActivity {
                     scenariosListView.setOnTouchListener(new OnSwipeTouchListener(scenariosActivity.this, scenariosListView){
                         public void onSwipeLeft(int pos) {
                             try{
-                                deleteScenario(reader.getJSONObject(pos).getInt("scenarioID"));
+                                deleteScenario(reader.getJSONObject(pos).getInt("scenarioID"), reader.getJSONObject(pos).getInt("scenarioNumber"));
                             }catch(JSONException e){
                             }
                         }
@@ -76,7 +77,7 @@ public class scenariosActivity extends AppCompatActivity {
                                         Intent goToScenario = new Intent(scenariosActivity.this, scenarioViewActivity.class);
 
                                         goToScenario.putExtra("scenarioID", reader.getJSONObject(position).getInt("scenarioID"));
-                                        goToScenario.putExtra("scenarioNumber", reader.getJSONObject(position).getInt("scenarioNumber"));
+                                        goToScenario.putExtra("scenarioNumber", Integer.toString(reader.getJSONObject(position).getInt("scenarioNumber")));
 
                                         startActivity(goToScenario);
                                     }
@@ -91,11 +92,11 @@ public class scenariosActivity extends AppCompatActivity {
         conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getScenarios");
     }
 
-    public void deleteScenario(final int scenarioID){
+    public void deleteScenario(final int scenarioID, int scenarioNumber){
         //Put up the Yes/No message box
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Delete scenario");
-        builder.setMessage("Are you sure?");
+        builder.setMessage("Are you sure you want to delete scenario Number " + Integer.toString(scenarioNumber) + " ?");
         builder.setIcon(android.R.drawable.ic_dialog_alert);
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -127,4 +128,14 @@ public class scenariosActivity extends AppCompatActivity {
         Intent intent = new Intent(this, addScenarioActivity.class);
         startActivity(intent);
     }
+
+    /*
+    //Dot Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_dot, menu);
+        return true;
+    }
+     */
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,11 +28,11 @@ public class technicalPlansActivity extends AppCompatActivity {
         toolbar.setTitle("Technical plan");
         setSupportActionBar(toolbar);
 
-        getPRVs();
+        getProjectsInPRVs();
     }
 
-    public void getPRVs(){
-        final ArrayList<prv> prvsList = new ArrayList<prv>();
+    public void getProjectsInPRVs(){
+        final ArrayList<project> projectsInPRVsList = new ArrayList<project>();
         HashMap<String, String> params = new HashMap<String, String>();
         Connection conn = new Connection(params, new ConnectionPostListener() {
             @Override
@@ -41,22 +42,18 @@ public class technicalPlansActivity extends AppCompatActivity {
                     for (int i = 0; i < reader.length(); ++i) {
                         JSONObject data = reader.getJSONObject(i);
 
-                        prv prvObject = new prv();
+                        project projectInPRVObject = new project();
 
-                        prvObject.prvID = data.getInt("prvID");
-                        prvObject.prvProjectID = data.getInt("prvProjectID");
-                        prvObject.prvRegionID = data.getInt("prvRegionID");
-                        prvObject.prvVendorID = data.getInt("prvVendorID");
-                        prvObject.prvYearTarget = data.getInt("prvYearTarget");
-                        prvObject.projectName = data.getString("projectName");
+                        projectInPRVObject.projectID = data.getInt("projectID");
+                        projectInPRVObject.projectName = data.getString("projectName");
 
-                        prvsList.add(prvObject);
+                        projectsInPRVsList.add(projectInPRVObject);
                     }
 
-                    ArrayAdapter<prv> prvListAdapter = new prvAdapter(technicalPlansActivity.this, prvsList);
+                    ArrayAdapter<project> projectsInPRVsListAdapter = new projectsAdapter(technicalPlansActivity.this, projectsInPRVsList);
                     // Connect list and adapter
                     ListView projectsInTechnicalPlanListView = (ListView) findViewById(R.id.projectsInTechnicalPlanListView);
-                    projectsInTechnicalPlanListView.setAdapter(prvListAdapter);
+                    projectsInTechnicalPlanListView.setAdapter(projectsInPRVsListAdapter);
 
                     // On item click listener
                     projectsInTechnicalPlanListView.setOnItemClickListener(
@@ -65,8 +62,8 @@ public class technicalPlansActivity extends AppCompatActivity {
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                     try{
                                         Intent goToPRV = new Intent(technicalPlansActivity.this, prvViewActivity.class);
-                                        goToPRV.putExtra("projectID", prvsList.get(position).getPrvProjectID());
-                                        goToPRV.putExtra("projectName", prvsList.get(position).getProjectName());
+                                        goToPRV.putExtra("projectID", projectsInPRVsList.get(position).getProjectID());
+                                        goToPRV.putExtra("projectName", projectsInPRVsList.get(position).getProjectName());
                                         startActivity(goToPRV);
                                     }
                                     catch (Exception e){}
@@ -77,11 +74,22 @@ public class technicalPlansActivity extends AppCompatActivity {
                 }
             }
         });
-        conn.execute(conn.URL + "/getPRVs");
+        conn.execute(conn.URL + "/getProjectsInPRVs");
     }
 
     public void addProject(View view) {
         Intent intent = new Intent(technicalPlansActivity.this, addProjectToTechnicalPlanActivity.class);
         startActivity(intent);
+        finish();
     }
+
+    /*
+    //Dot Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_dot, menu);
+        return true;
+    }
+     */
 }

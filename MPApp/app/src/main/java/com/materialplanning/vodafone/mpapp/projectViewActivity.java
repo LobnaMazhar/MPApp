@@ -121,7 +121,7 @@ public class projectViewActivity extends AppCompatActivity {
                 }
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getScenariosInProject");
+        conn.execute(conn.URL + "/getScenariosByProjectID");
     }
 
     public void deleteScenarios(ArrayList<Integer> selectedScenariosToDelete){
@@ -138,7 +138,7 @@ public class projectViewActivity extends AppCompatActivity {
                     }
                 }
             });
-            conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/deleteScenarioFromProject");
+            conn.execute(conn.URL + "/deleteScenarioFromProject");
         }
     }
 
@@ -161,7 +161,7 @@ public class projectViewActivity extends AppCompatActivity {
                 }
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/editProject");
+        conn.execute(conn.URL + "/editProject");
     }
 
     public void addScenariosToProject(View view) {
@@ -241,7 +241,7 @@ public class projectViewActivity extends AppCompatActivity {
                 }
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getScenarios");
+        conn.execute(conn.URL + "/getScenarios");
     }
 
     public void addScenariosToProject(ArrayList<Integer> selectedScenariosToAdd){
@@ -258,8 +258,18 @@ public class projectViewActivity extends AppCompatActivity {
                     }
                 }
             });
-            conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/addScenarioToProject");
+            conn.execute(conn.URL + "/addScenarioToProject");
         }
         Toast.makeText(projectViewActivity.this, Integer.toString(selectedScenariosToAdd.size()) + " scenarios added.", Toast.LENGTH_LONG).show();
     }
+
+    /*
+    //Dot Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_dot, menu);
+        return true;
+    }
+     */
 }

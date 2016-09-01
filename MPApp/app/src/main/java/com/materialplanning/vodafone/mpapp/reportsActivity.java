@@ -1,33 +1,13 @@
 package com.materialplanning.vodafone.mpapp;
 
-import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ListPopupWindow;
-import android.support.v7.widget.ListViewCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.Workbook;
 
 public class reportsActivity extends AppCompatActivity {
 
@@ -42,26 +22,26 @@ public class reportsActivity extends AppCompatActivity {
 
         getReports();
 
-   /*     String filename = getIntent().getExtras().getString("filename");
+      /*     String filename = getIntent().getExtras().getString("filename");
         if(!filename.equals(""))
             saveBOM(filename);*/
     }
-/*
-    public void getBOM(View view){
-        startActivity(new Intent(reportsActivity.this, fileChooserActivity.class));
-    }
+    /*
+        public void getBOM(View view){
+            startActivity(new Intent(reportsActivity.this, fileChooserActivity.class));
+        }
 
-    public void saveBOM(String filename){
-        String cellContents="";
-        try{
+        public void saveBOM(String filename){
+            String cellContents="";
+            try{
 
-           /* BufferedReader inputReader = new BufferedReader(new InputStreamReader(
-                    openFileInput("rollout.xls")));
-            StringBuffer stringBuffer = new StringBuffer();
-            while ((cellContents = inputReader.readLine()) != null) {
-                Toast.makeText(this, "READING", Toast.LENGTH_SHORT).show();
-                stringBuffer.append(cellContents + "\n");
-            }*/
+               /* BufferedReader inputReader = new BufferedReader(new InputStreamReader(
+                        openFileInput("rollout.xls")));
+                StringBuffer stringBuffer = new StringBuffer();
+                while ((cellContents = inputReader.readLine()) != null) {
+                    Toast.makeText(this, "READING", Toast.LENGTH_SHORT).show();
+                    stringBuffer.append(cellContents + "\n");
+                }*/
 /*
             File sdcard = Environment.getExternalStorageDirectory();
             File file = new File(sdcard,filename);
@@ -87,7 +67,7 @@ public class reportsActivity extends AppCompatActivity {
     }
 
     public void rollout(View view){
-        Intent intent = new Intent(this, rolloutActivity.class);
+        Intent intent = new Intent(this, siteActivity.class);
         startActivity(intent);
     }
 */
@@ -95,7 +75,7 @@ public class reportsActivity extends AppCompatActivity {
         final String[] reportsList = getResources().getStringArray(R.array.reports);
 
         ListView reportsListView = (ListView) findViewById(R.id.reportsListView);
-        ArrayAdapter<String> reportsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, reportsList);
+        final ArrayAdapter<String> reportsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, reportsList);
         reportsListView.setAdapter(reportsAdapter);
 
         // TODO on click
@@ -105,8 +85,31 @@ public class reportsActivity extends AppCompatActivity {
                 if(reportsList[position].equals("Technical Plan")){
                     Intent goToTechnicalPlan = new Intent(reportsActivity.this, technicalPlansActivity.class);
                     startActivity(goToTechnicalPlan);
+                }else if(reportsList[position].equals("New Rollout")){
+                    Intent goToRollout = new Intent(reportsActivity.this, siteActivity.class);
+                    goToRollout.putExtra("rollout/expansion", "1");
+                    startActivity(goToRollout);
+                }else if(reportsList[position].equals("Expansions")){
+                    Intent goToExpansions = new Intent(reportsActivity.this, siteActivity.class);
+                    goToExpansions.putExtra("rollout/expansion", "2");
+                    startActivity(goToExpansions);
                 }
             }
         });
     }
+
+    public void getBOM(View view){
+        Intent goToBOM = new Intent(reportsActivity.this, billOfMaterialActivity.class);
+        startActivity(goToBOM);
+    }
+
+     /*
+    //Dot Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_dot, menu);
+        return true;
+    }
+     */
 }

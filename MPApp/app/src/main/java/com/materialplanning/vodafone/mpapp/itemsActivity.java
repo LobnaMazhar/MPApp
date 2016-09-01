@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -67,7 +68,7 @@ public class itemsActivity extends AppCompatActivity {
                     itemsList.setOnTouchListener(new OnSwipeTouchListener(itemsActivity.this,itemsList){
                         public void onSwipeLeft(int pos) {
                             try{
-                                deleteItem(reader.getJSONObject(pos).getInt("itemID"));
+                                deleteItem(reader.getJSONObject(pos).getInt("itemID"), reader.getJSONObject(pos).getString("itemShortDescription"));
                             }catch (JSONException e){
                             }
                         }
@@ -84,7 +85,7 @@ public class itemsActivity extends AppCompatActivity {
                                         goToItem.putExtra("itemID", reader.getJSONObject(position).getInt("itemID"));
                                         goToItem.putExtra("itemEvoCode", reader.getJSONObject(position).getString("itemEvoCode"));
                                         goToItem.putExtra("itemShortDescription", reader.getJSONObject(position).getString("itemShortDescription"));
-                                        goToItem.putExtra("itemQuantity", reader.getJSONObject(position).getInt("itemQuantity"));
+                                        goToItem.putExtra("itemQuantity", Integer.toString(reader.getJSONObject(position).getInt("itemQuantity")));
 
                                         startActivity(goToItem);
                                     }
@@ -99,11 +100,11 @@ public class itemsActivity extends AppCompatActivity {
         conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getItems");
     }
 
-    public void deleteItem(final int itemID){
+    public void deleteItem(final int itemID, String itemShortDescription){
         //Put up the Yes/No message box
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Delete item");
-        builder.setMessage("Are you sure?");
+        builder.setMessage("Are you sure you want to delete item " + itemShortDescription + " ?");
         builder.setIcon(android.R.drawable.ic_dialog_alert);
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -125,7 +126,7 @@ public class itemsActivity extends AppCompatActivity {
                         }
                     }
                 });
-                conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/deleteItem");
+                conn.execute(conn.URL + "/deleteItem");
             }
         });
         builder.setNegativeButton("No", null);
@@ -136,4 +137,14 @@ public class itemsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, addItemActivity.class);
         startActivity(intent);
     }
+
+     /*
+    //Dot Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_dot, menu);
+        return true;
+    }
+     */
 }

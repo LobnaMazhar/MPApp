@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +32,7 @@ public class itemViewActivity extends AppCompatActivity {
         itemShortDescriptionEditText.setText(getIntent().getExtras().getString("itemShortDescription"));
 
         TextView itemQuantityEditText = (TextView) findViewById(R.id.itemQuantityEditText);
-        itemQuantityEditText.setText(Integer.toString(getIntent().getExtras().getInt("itemQuantity")));
+        itemQuantityEditText.setText(getIntent().getExtras().getString("itemQuantity"));
     }
 
     /*
@@ -137,7 +138,7 @@ public class itemViewActivity extends AppCompatActivity {
                         goToItem.putExtra("itemID", getIntent().getExtras().getInt("itemID"));
                         goToItem.putExtra("itemEvoCode", itemEvoCode);
                         goToItem.putExtra("itemShortDescription", itemShortDescription);
-                        goToItem.putExtra("itemQuantity", Integer.parseInt(itemQuantity));
+                        goToItem.putExtra("itemQuantity", itemQuantity);
 
                         startActivity(goToItem);
                         finish();
@@ -147,7 +148,17 @@ public class itemViewActivity extends AppCompatActivity {
                 }
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/editItem");
+        conn.execute(conn.URL + "/editItem");
     }
+
+     /*
+    //Dot Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_dot, menu);
+        return true;
+    }
+     */
 
 }

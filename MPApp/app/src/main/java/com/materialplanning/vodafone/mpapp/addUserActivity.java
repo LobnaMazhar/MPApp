@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -30,7 +31,7 @@ public class addUserActivity extends AppCompatActivity {
         HashMap<String,String> params = new HashMap<String, String>();
 
         EditText addUserNameEditText = (EditText) findViewById(R.id.addUserNameEditText);
-        String username = addUserNameEditText.getText().toString();
+        final String username = addUserNameEditText.getText().toString();
         if(username.isEmpty()){
             Toast.makeText(this, "Enter a username", Toast.LENGTH_LONG).show();
             return;
@@ -50,13 +51,25 @@ public class addUserActivity extends AppCompatActivity {
             public void doSomething(String result) {
                 try{
                     JSONObject reader = new JSONObject(result);
-                    String msg = "User " + reader.getString("userName") + " is added successfully";
-                    Toast.makeText(addUserActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    if(reader.getBoolean("added")){
+                        String msg = "User " + username + " is added successfully";
+                        Toast.makeText(addUserActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
                 }catch(JSONException e){
                 }
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/addUser");
+        conn.execute(conn.URL + "/addUser");
     }
+
+    /*
+    //Dot Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_dot, menu);
+        return true;
+    }
+     */
 
 }

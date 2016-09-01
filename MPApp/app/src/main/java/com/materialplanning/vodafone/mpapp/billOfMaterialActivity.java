@@ -1,10 +1,11 @@
 package com.materialplanning.vodafone.mpapp;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -28,13 +30,13 @@ import java.util.HashMap;
 
 public class billOfMaterialActivity extends AppCompatActivity {
 
-    String selectedDate = "";
+    int selectedDate = -1;
     int selectedRegionID = 0;
+    int selectedProjectID = 0;
+    int selectedScenarioID = 0;
+    int selectedVendorID = 0;
 
-    ArrayList<Integer> selectedProjects = new ArrayList<Integer>();
-    boolean addProjectsButtonPressed = false;
-    ArrayList<Integer> selectedItems = new ArrayList<Integer>();
-    boolean addItemsButtonPressed = false;
+    boolean siteExists, availableStock, siteAndProjectExists;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,50 +47,169 @@ public class billOfMaterialActivity extends AppCompatActivity {
         toolbar.setTitle("Add BOM");
         setSupportActionBar(toolbar);
 
-        prepareRegions();
         prepareMonths();
+        prepareRegions();
+        prepareProjects();
+    //    prepareScenarios(); // called after choosing the project
+        prepareVendors();
     }
 
     public void saveBOM(View view){
         EditText siteIDEditText = (EditText) findViewById(R.id.siteIDEditText);
-        String siteID = siteIDEditText.getText().toString();
+        final String siteID = siteIDEditText.getText().toString();
         if(siteID.isEmpty()){
             Toast.makeText(billOfMaterialActivity.this, "Enter siteID first", Toast.LENGTH_LONG).show();
-        }else if(selectedDate.equals("")){
+        }else if(selectedDate == -1){
             Toast.makeText(billOfMaterialActivity.this, "Select date", Toast.LENGTH_LONG).show();
         }else if(selectedRegionID == 0) {
             Toast.makeText(billOfMaterialActivity.this, "Select region", Toast.LENGTH_LONG).show();
-        }else if(!addProjectsButtonPressed){
-            Toast.makeText(billOfMaterialActivity.this, "Add project(s)", Toast.LENGTH_LONG).show();
-        }else if(!addItemsButtonPressed){
-            Toast.makeText(billOfMaterialActivity.this, "Add item(s)", Toast.LENGTH_LONG).show();
+        }else if(selectedProjectID == 0){
+            Toast.makeText(billOfMaterialActivity.this, "Select project", Toast.LENGTH_LONG).show();
+        }else if(selectedScenarioID == 0){
+            Toast.makeText(billOfMaterialActivity.this, "Select scenario", Toast.LENGTH_LONG).show();
+        }else if(selectedVendorID == 0){
+            Toast.makeText(billOfMaterialActivity.this, "Select vendor", Toast.LENGTH_LONG).show();
         }else{
-            HashMap<String, String> params = new HashMap<String, String>();
+            final HashMap<String, String> params = new HashMap<String, String>();
             params.put("siteID", siteID);
-            params.put("Date", selectedDate);
-            params.put("RegionID", Integer.toString(selectedRegionID));
+            params.put("date", Integer.toString(selectedDate));
+            params.put("regionID", Integer.toString(selectedRegionID));
+            params.put("projectID", Integer.toString(selectedProjectID));
+            params.put("scenarioID", Integer.toString(selectedScenarioID));
+            params.put("vendorID", Integer.toString(selectedVendorID));
 
-            Connection conn = new Connection(params, new ConnectionPostListener() {
-                @Override
-                public void doSomething(String result) {
-                    try{
-                        JSONObject reader = new JSONObject(result);
-                        if(reader.getBoolean("added")){
-                            int BOMID = reader.getInt("BOMID");
-                            addProjects(selectedProjects, BOMID);
-                            addItems(selectedItems, BOMID);
-                            Toast.makeText(billOfMaterialActivity.this, "BOM added", Toast.LENGTH_SHORT).show();
+            if (siteExists(siteID)) {
+                params.put("Rollout/Expansion", "2");
+
+                HashMap<String, String> params2 = new HashMap<>();
+                params2.put("siteID", siteID);
+                Connection conn2 = new Connection(params2, new ConnectionPostListener() {
+                    @Override
+                    public void doSomething(String result) {
+                        try{
+                            JSONObject reader = new JSONObject(result);
+                            if(reader.getInt("regionID") != selectedRegionID){
+                                TextView regionErrorTextView = (TextView) findViewById(R.id.regionErrorTextView);
+                                regionErrorTextView.setText("Expansion site, choose the correct region");
+                            }else if(reader.getInt("vendorID") != selectedVendorID){
+                                TextView vendorErrorTextView = (TextView) findViewById(R.id.vendorErrorTextView);
+                                vendorErrorTextView.setText("Expansion site, choose the correct vendor");
+                            }else if(siteAndProjectExists(siteID, selectedProjectID)){
+                                TextView projectErrorTextView = (TextView) findViewById(R.id.projectErrorTextView);
+                                projectErrorTextView.setText("Expansion site, can't expand for the same project");
+                            }else if(!availableStock(selectedScenarioID)){
+                                TextView scenarioErrorTextView = (TextView) findViewById(R.id.scenarioErrorTextView);
+                                scenarioErrorTextView.setText("No enough stock to release using this scenario");
+                            }else{
+                                Connection conn = new Connection(params, new ConnectionPostListener() {
+                                    @Override
+                                    public void doSomething(String result) {
+                                        try {
+                                            JSONObject reader = new JSONObject(result);
+                                            if (reader.getBoolean("added")) {
+                                                try{
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(billOfMaterialActivity.this);
+                                                    builder.setTitle("Release site");
+                                                    builder.setMessage("Site is expanded successfully, send to the vendor to release");
+
+                                                    // Set up the buttons
+                                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            finish();
+                                                        }
+                                                    });
+                                                    builder.show();
+                                                }catch (Exception e) {
+                                                }
+                                            }
+                                        } catch (JSONException e) {
+                                        }
+                                    }
+                                });
+                                conn.execute(conn.URL + "/addProjectToSite");
+                            }
+                        }catch (JSONException e){
                         }
-                    }catch (JSONException e){
                     }
-                }
-            });
-            conn.execute(conn.URL + "/addBOM");
+                });
+                conn2.execute(conn2.URL + "/getSiteByID");
+            } else {
+                params.put("Rollout/Expansion", "1");
+
+                Connection conn = new Connection(params, new ConnectionPostListener() {
+                    @Override
+                    public void doSomething(String result) {
+                        try {
+                            JSONObject reader = new JSONObject(result);
+                            if (reader.getBoolean("added")) {
+                               try{
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(billOfMaterialActivity.this);
+                                    builder.setTitle("Release site");
+                                    builder.setMessage("Site is added successfully, send to the vendor to release");
+
+                                    // Set up the buttons
+                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            finish();
+                                        }
+                                    });
+                                    builder.show();
+                                }catch (Exception e) {
+                               }
+                            }
+                        } catch (JSONException e) {
+                        }
+                    }
+                });
+                conn.execute(conn.URL + "/addSite");
+            }
         }
+    }
+
+    public void prepareMonths(){
+        final ArrayList<String> monthsList = new ArrayList<String>();
+        monthsList.add("");
+        monthsList.add("April");
+        monthsList.add("May");
+        monthsList.add("June");
+        monthsList.add("July");
+        monthsList.add("August");
+        monthsList.add("September");
+        monthsList.add("October");
+        monthsList.add("November");
+        monthsList.add("December");
+        monthsList.add("January");
+        monthsList.add("February");
+        monthsList.add("March");
+
+        Spinner dateSpinner = (Spinner) findViewById(R.id.dateSpinner);
+        ArrayAdapter<String> dateAdapter = new ArrayAdapter<String>(billOfMaterialActivity.this, R.layout.support_simple_spinner_dropdown_item, monthsList);
+        dateSpinner.setAdapter(dateAdapter);
+
+        dateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                String monthName = Integer.toString(position) + " " + monthsList.get(position);
+                if(!monthName.equals("")) {
+                    Toast.makeText(billOfMaterialActivity.this, monthName, Toast.LENGTH_SHORT).show();
+                    selectedDate = (position);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
     }
 
     public void prepareRegions(){
         final ArrayList<region> regionsList = new ArrayList<region>();
+        region regionObject = new region();
+        regionObject.regionName = "";
+        regionsList.add(regionObject);
+
         HashMap<String, String> params = new HashMap<String, String>();
         Connection conn = new Connection(params, new ConnectionPostListener() {
             @Override
@@ -106,15 +227,21 @@ public class billOfMaterialActivity extends AppCompatActivity {
                 }catch (JSONException e){
                 }
 
-                Spinner regionSpinner = (Spinner) findViewById(R.id.dateSpinner);
-                regionAdapter regionAdapter = new regionAdapter(billOfMaterialActivity.this, regionsList);
+                Spinner regionSpinner = (Spinner) findViewById(R.id.regionSpinner);
+                regionSpinnerAdapter regionAdapter = new regionSpinnerAdapter(billOfMaterialActivity.this, regionsList);
                 regionSpinner.setAdapter(regionAdapter);
 
                 regionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                        Toast.makeText(billOfMaterialActivity.this, regionsList.get(position).getRegionName(), Toast.LENGTH_SHORT).show();
-                        selectedRegionID = regionsList.get(position).getRegionID();
+                        TextView regionErrorTextView = (TextView) findViewById(R.id.regionErrorTextView);
+                        regionErrorTextView.setText("");
+
+                        String regionName = regionsList.get(position).getRegionName();
+                        if(!regionName.equals("")) {
+                            Toast.makeText(billOfMaterialActivity.this, regionName, Toast.LENGTH_SHORT).show();
+                            selectedRegionID = regionsList.get(position).getRegionID();
+                        }
                     }
 
                     @Override
@@ -127,266 +254,221 @@ public class billOfMaterialActivity extends AppCompatActivity {
         conn.execute(conn.URL + "/getRegions");
     }
 
-    public void prepareMonths(){
-        final ArrayList<String> monthsList = new ArrayList<String>();
-        monthsList.add("April");
-        monthsList.add("May");
-        monthsList.add("June");
-        monthsList.add("July");
-        monthsList.add("August");
-        monthsList.add("September");
-        monthsList.add("October");
-        monthsList.add("November");
-        monthsList.add("December");
+    public void prepareProjects(){
+        final ArrayList<project> projectsList = new ArrayList<project>();
+        project projectObject = new project();
+        projectObject.projectName = "";
+        projectsList.add(projectObject);
 
-        Spinner dateSpinner = (Spinner) findViewById(R.id.dateSpinner);
-        ArrayAdapter<String> dateAdapter = new ArrayAdapter<String>(billOfMaterialActivity.this, R.layout.support_simple_spinner_dropdown_item, monthsList);
-        dateSpinner.setAdapter(dateAdapter);
-
-        dateSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-                Toast.makeText(billOfMaterialActivity.this, monthsList.get(position), Toast.LENGTH_SHORT).show();
-                selectedDate = monthsList.get(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
-    }
-
-    public void addProjects(View view){
-        // Hide the buttons & ListView
-        Button addItemsToBOMButton = (Button) findViewById(R.id.addItemsToBOMButton);
-        addItemsToBOMButton.setVisibility(View.INVISIBLE);
-
-        Button addProjectsToBOMButton = (Button) findViewById(R.id.addProjectsToBOMButton);
-        addProjectsToBOMButton.setVisibility(View.INVISIBLE);
-
-        ListView addItemsToBOMListView = (ListView) findViewById(R.id.addItemsToBOMListView);
-        addItemsToBOMListView.setVisibility(View.INVISIBLE);
-
-        // Show the listView
-        ListView addProjectsToBOMListView = (ListView) findViewById(R.id.addProjectsToBOMListView);
-        addProjectsToBOMListView.setVisibility(View.VISIBLE);
-
-        showProjectsToSelectFrom();
-    }
-
-    public void showProjectsToSelectFrom() {
-        final ArrayList<project> projectList = new ArrayList<project>();
         HashMap<String, String> params = new HashMap<String, String>();
         Connection conn = new Connection(params, new ConnectionPostListener() {
             @Override
             public void doSomething(String result) {
-                try {
-                    final JSONArray reader = new JSONArray(result);
-                    for (int i = 0; i < reader.length(); ++i) {
+                try{
+                    JSONArray reader = new JSONArray(result);
+                    for(int i=0; i<reader.length(); ++i){
                         JSONObject data = reader.getJSONObject(i);
 
                         project projectObject = new project();
-
                         projectObject.projectID = data.getInt("projectID");
                         projectObject.projectName = data.getString("projectName");
+                        projectsList.add(projectObject);
+                    }
+                }catch (JSONException e){
+                }
 
-                        projectList.add(projectObject);
+                Spinner projectSpinner = (Spinner) findViewById(R.id.projectSpinner);
+                projectSpinnerAdapter projectSpinnerAdapter = new projectSpinnerAdapter(billOfMaterialActivity.this, projectsList);
+                projectSpinner.setAdapter(projectSpinnerAdapter);
+
+                projectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                        TextView projectErrorTextView = (TextView) findViewById(R.id.projectErrorTextView);
+                        projectErrorTextView.setText("");
+
+                        String projectName = projectsList.get(position).getProjectName();
+                        if(!projectName.equals("")) {
+                            Toast.makeText(billOfMaterialActivity.this, projectName, Toast.LENGTH_SHORT).show();
+                            selectedProjectID = projectsList.get(position).getProjectID();
+                            prepareScenarios(selectedProjectID);
+                        }
                     }
 
-                    ArrayAdapter<project> projectsListAdapter = new projectsAdapter(billOfMaterialActivity.this, projectList);
-                    // Connect list and adapter
-                    ListView addProjectsToBOMListView = (ListView) findViewById(R.id.addProjectsToBOMListView);
-                    addProjectsToBOMListView.setAdapter(projectsListAdapter);
-
-//                    final ArrayList<Integer> selectedProjects = new ArrayList<Integer>();
-
-                    addProjectsToBOMListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-                    addProjectsToBOMListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-                        @Override
-                        public void onItemCheckedStateChanged(ActionMode actionMode, int position, long id, boolean checked) {
-                            if (checked) {
-                                selectedProjects.add(projectList.get(position).getProjectID());
-                            }else{
-                                int indexToRemove = selectedProjects.indexOf(projectList.get(position).getProjectID());
-                                selectedProjects.remove(indexToRemove);
-                            }
-                            actionMode.setTitle(selectedProjects.size() + " projects selected.");
-                        }
-
-                        @Override
-                        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-                            MenuInflater inflater = actionMode.getMenuInflater();
-                            inflater.inflate(R.menu.context_add, menu);
-                            return true;
-                        }
-
-                        @Override
-                        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-                            switch (menuItem.getItemId()) {
-                                case R.id.add:
-                                    addProjectsButtonPressed = true;
-                                    getDesignBack();
-                                    actionMode.finish();
-                                    return true;
-                                default:
-                                    return false;
-                            }
-                        }
-
-                        @Override
-                        public void onDestroyActionMode(ActionMode actionMode) {
-                        }
-                    });
-                } catch (JSONException e) {
-                }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+                    }
+                });
             }
         });
         conn.execute(conn.URL + "/getProjects");
     }
 
-    public void addItems(View view){
-        // Hide the buttons & ListView
-        Button addItemsToBOMButton = (Button) findViewById(R.id.addItemsToBOMButton);
-        addItemsToBOMButton.setVisibility(View.INVISIBLE);
+    public void prepareScenarios(int selectedProjectID){
+        final ArrayList<scenario> scenariosList = new ArrayList<scenario>();
+        scenario scenarioObject = new scenario();
+        scenarioObject.scenarioNumber = 0;
+        scenariosList.add(scenarioObject);
 
-        Button addProjectsToBOMButton = (Button) findViewById(R.id.addProjectsToBOMButton);
-        addProjectsToBOMButton.setVisibility(View.INVISIBLE);
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("projectID", Integer.toString(selectedProjectID));
+        Connection conn = new Connection(params, new ConnectionPostListener() {
+            @Override
+            public void doSomething(String result) {
+                try{
+                    JSONArray reader = new JSONArray(result);
+                    for(int i=0; i<reader.length(); ++i){
+                        JSONObject data = reader.getJSONObject(i);
 
-        ListView addProjectsToBOMListView = (ListView) findViewById(R.id.addProjectsToBOMListView);
-        addProjectsToBOMListView.setVisibility(View.INVISIBLE);
+                        scenario scenarioObject = new scenario();
+                        scenarioObject.scenarioID = data.getInt("scenarioID");
+                        scenarioObject.scenarioNumber = data.getInt("scenarioNumber");
+                        scenariosList.add(scenarioObject);
+                    }
+                }catch (JSONException e){
+                }
 
-        // Show the listView
-        ListView addItemsToBOMListView = (ListView) findViewById(R.id.addItemsToBOMListView);
-        addItemsToBOMListView.setVisibility(View.VISIBLE);
+                Spinner scenarioSpinner = (Spinner) findViewById(R.id.scenarioSpinner);
+                scenarioSpinnerAdapter scenarioAdapter = new scenarioSpinnerAdapter(billOfMaterialActivity.this, scenariosList);
+                scenarioSpinner.setAdapter(scenarioAdapter);
 
-        showItemsToSelectFrom();
+                scenarioSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                        TextView scenarioErrorTextView = (TextView) findViewById(R.id.scenarioErrorTextView);
+                        scenarioErrorTextView.setText("");
+
+                        int scenarioNumber = scenariosList.get(position).getScenarioNumber();
+                        if(scenarioNumber != 0) {
+                            Toast.makeText(billOfMaterialActivity.this, Integer.toString(scenarioNumber), Toast.LENGTH_SHORT).show();
+                            selectedScenarioID = scenariosList.get(position).getScenarioID();
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+                    }
+                });
+            }
+        });
+        conn.execute(conn.URL + "/getScenariosByProjectID");
     }
 
-    public void showItemsToSelectFrom() {
-        final ArrayList<item> itemList = new ArrayList<item>();
+    public void prepareVendors(){
+        final ArrayList<vendor> vendorsList = new ArrayList<vendor>();
+        vendor vendorObject = new vendor();
+        vendorObject.vendorName = "";
+        vendorsList.add(vendorObject);
+
         HashMap<String, String> params = new HashMap<String, String>();
         Connection conn = new Connection(params, new ConnectionPostListener() {
             @Override
             public void doSomething(String result) {
-                try {
-                    final JSONArray reader = new JSONArray(result);
-                    for (int i = 0; i < reader.length(); ++i) {
+                try{
+                    JSONArray reader = new JSONArray(result);
+                    for(int i=0; i<reader.length(); ++i){
                         JSONObject data = reader.getJSONObject(i);
 
-                        item itemObject = new item();
+                        vendor vendorObject = new vendor();
+                        vendorObject.vendorID = data.getInt("vendorID");
+                        vendorObject.vendorName = data.getString("vendorName");
+                        vendorsList.add(vendorObject);
+                    }
+                }catch (JSONException e){
+                }
 
-                        itemObject.itemID = data.getInt("itemID");
-                        itemObject.itemEvoCode = data.getString("itemEvoCode");
-                        itemObject.itemShortDescription = data.getString("itemShortDescription");
-                        itemObject.itemQuantity = data.getInt("itemQuantity");
+                Spinner vendorSpinner = (Spinner) findViewById(R.id.vendorSpinner);
+                vendorSpinnerAdapter vendorSpinnerAdapter = new vendorSpinnerAdapter(billOfMaterialActivity.this, vendorsList);
+                vendorSpinner.setAdapter(vendorSpinnerAdapter);
 
-                        itemList.add(itemObject);
+                vendorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                        TextView vendorErrorTextView = (TextView) findViewById(R.id.vendorErrorTextView);
+                        vendorErrorTextView.setText("");
+
+                        String vendorName = vendorsList.get(position).getVendorName();
+                        if(!vendorName.equals("")) {
+                            Toast.makeText(billOfMaterialActivity.this, vendorName, Toast.LENGTH_SHORT).show();
+                            selectedVendorID = vendorsList.get(position).getVendorID();
+                            prepareScenarios(selectedVendorID);
+                        }
                     }
 
-                    ArrayAdapter<item> itemListAdapter = new itemAdapter(billOfMaterialActivity.this, itemList);
-                    // Connect list and adapter
-                    ListView addItemsToBOMListView = (ListView) findViewById(R.id.addItemsToBOMListView);
-                    addItemsToBOMListView.setAdapter(itemListAdapter);
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+                    }
+                });
+            }
+        });
+        conn.execute(conn.URL + "/getVendors");
+    }
 
-//                    final ArrayList<Integer> selectedItems = new ArrayList<Integer>();
+    public boolean siteExists(String siteID){
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("siteID", siteID);
 
-                    addItemsToBOMListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-                    addItemsToBOMListView.setMultiChoiceModeListener(new AbsListView.MultiChoiceModeListener() {
-                        @Override
-                        public void onItemCheckedStateChanged(ActionMode actionMode, int position, long id, boolean checked) {
-                            if (checked) {
-                                selectedItems.add(itemList.get(position).getItemID());
-                            }else{
-                                int indexToRemove = selectedItems.indexOf(itemList.get(position).getItemID());
-                                selectedItems.remove(indexToRemove);
-                            }
-                            actionMode.setTitle(selectedItems.size() + " items selected.");
-                        }
-
-                        @Override
-                        public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
-                            MenuInflater inflater = actionMode.getMenuInflater();
-                            inflater.inflate(R.menu.context_add, menu);
-                            return true;
-                        }
-
-                        @Override
-                        public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-                            switch (menuItem.getItemId()) {
-                                case R.id.add:
-                                    addItemsButtonPressed = true;
-                                    getDesignBack();
-                                    actionMode.finish();
-                                    return true;
-                                default:
-                                    return false;
-                            }
-                        }
-
-                        @Override
-                        public void onDestroyActionMode(ActionMode actionMode) {
-                        }
-                    });
-                } catch (JSONException e) {
+        Connection conn = new Connection(params, new ConnectionPostListener() {
+            @Override
+            public void doSomething(String result) {
+                try{
+                    JSONObject reader = new JSONObject(result);
+                    siteExists = reader.getBoolean("exists");
+                }catch (JSONException e){
                 }
             }
         });
-        conn.execute(conn.URL + "/getItems");
+        conn.execute(conn.URL + "/checkIfSiteExists");
+
+        return siteExists;
     }
 
-    public void getDesignBack(){
-        // Hide the ListViews
-        ListView addItemsToBOMListView = (ListView) findViewById(R.id.addItemsToBOMListView);
-        addItemsToBOMListView.setVisibility(View.INVISIBLE);
+    public boolean availableStock(int selectedScenarioID){
+        HashMap<String, String> params = new HashMap<String, String>();
+        params.put("scenarioID", Integer.toString(selectedScenarioID));
 
-        ListView addProjectsToBOMListView = (ListView) findViewById(R.id.addProjectsToBOMListView);
-        addProjectsToBOMListView.setVisibility(View.INVISIBLE);
-
-        // Show the Buttons
-        Button addItemsToBOMButton = (Button) findViewById(R.id.addItemsToBOMButton);
-        addItemsToBOMButton.setVisibility(View.VISIBLE);
-
-        Button addProjectsToBOMButton = (Button) findViewById(R.id.addProjectsToBOMButton);
-        addProjectsToBOMButton.setVisibility(View.VISIBLE);
-    }
-
-    public void addProjects(ArrayList<Integer> selectedProjects, int BOMID){
-        for(int i=0; i<selectedProjects.size(); ++i){
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put("projectID", Integer.toString(selectedProjects.get(i)));
-            params.put("BOMID", Integer.toString(BOMID));
-
-            Connection conn = new Connection(params, new ConnectionPostListener() {
-                @Override
-                public void doSomething(String result) {
+        Connection conn = new Connection(params, new ConnectionPostListener() {
+            @Override
+            public void doSomething(String result) {
+                try{
+                    JSONObject reader = new JSONObject(result);
+                    availableStock = reader.getBoolean("available");
+                }catch (JSONException e){
                 }
-            });
-            conn.execute(conn.URL + "/addProjectsToBOM");
-        }
+            }
+        });
+        conn.execute(conn.URL + "/isAvailableStock");
+
+        return availableStock;
     }
 
-    public void addItems(ArrayList<Integer> selectedItems, int BOMID){
-        for(int i=0; i<selectedItems.size(); ++i){
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put("itemID", Integer.toString(selectedItems.get(i)));
-            params.put("BOMID", Integer.toString(BOMID));
+    public boolean siteAndProjectExists(String siteID, int selectedProjectID){
+        HashMap<String, String> params = new HashMap<>();
+        params.put("siteID", siteID);
+        params.put("projectID", Integer.toString(selectedProjectID));
 
-            Connection conn = new Connection(params, new ConnectionPostListener() {
-                @Override
-                public void doSomething(String result) {
+        Connection conn = new Connection(params, new ConnectionPostListener() {
+            @Override
+            public void doSomething(String result) {
+                try{
+                    JSONObject reader = new JSONObject(result);
+                    siteAndProjectExists = reader.getBoolean("exists");
+                }catch (JSONException e){
                 }
-            });
-            conn.execute(conn.URL + "/addItemsToBOM");
-        }
+            }
+        });
+        conn.execute(conn.URL + "/checkSiteAndProjectExists");
+
+     return siteAndProjectExists;
     }
+
+    /*
+    //Dot Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_dot, menu);
+        return true;
+    }
+     */
 }

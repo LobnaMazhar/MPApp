@@ -5,10 +5,13 @@ package com.materialplanning.vodafone.mpapp;
  */
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Region;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,108 +22,50 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 @SuppressWarnings("unchecked")
 public class projectInPRVAdapter extends BaseExpandableListAdapter {
 
-    Context ctx;
-    public ArrayList<region> regionsList = new ArrayList<region>();
-    public ArrayList<vendor> vendorsList = new ArrayList<vendor>();
-    private ArrayList<prv> prvsList = new ArrayList<prv>();
+    private Context context;
+    private ArrayList<region> regions;
+    private LayoutInflater inflater;
 
-    ArrayList<String> tempChild;
-    public LayoutInflater minflater;
-    public Activity activity;
-
-    public projectInPRVAdapter(ArrayList<region> regionsList, ArrayList<vendor> vendorsList, ArrayList<prv> prvsList) {
-        this.regionsList = regionsList;
-        this.vendorsList = vendorsList;
-        this.prvsList = prvsList;
-    }
-
-    public void setInflater(LayoutInflater mInflater, Activity act) {
-        this.minflater = mInflater;
-        activity = act;
-    }
-
-    @Override
-    public Object getChild(int groupPosition, int childPosition) {
-        return null;
-    }
-
-    @Override
-    public long getChildId(int groupPosition, int childPosition) {
-        return 0;
-    }
-
-    @Override
-    public View getChildView(int groupPosition, int childPosition,
-                             boolean isLastChild, View convertView, ViewGroup parent) {
-
-        View v = convertView;
-
-        if (v == null) {
-            LayoutInflater inflater = (LayoutInflater)ctx.getSystemService
-                    (Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(R.layout.prvexpandablelist_childrow, parent, false);
-        }
-
-        vendor vendorObject = vendorsList.get(groupPosition);
-        TextView vendorNameTextView = (TextView) v.findViewById(R.id.vendorNameExpandableListTextView);
-        vendorNameTextView.setText(vendorObject.getVendorName());
-        EditText yearTargetEditText = (EditText) v.findViewById(R.id.yearTargetExpandableListEditText);
-        yearTargetEditText.setText("2");
-
-        return v;
-    }
-
-    @Override
-    public int getChildrenCount(int groupPosition) {
-        return vendorsList.size();
-    }
-
-    @Override
-    public Object getGroup(int groupPosition) {
-        return null;
+    public projectInPRVAdapter(Context context, ArrayList<region> regions){
+        this.context = context;
+        this.regions = regions;
+        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getGroupCount() {
-        return regionsList.size();
+        return regions.size();
     }
 
     @Override
-    public void onGroupCollapsed(int groupPosition) {
-        super.onGroupCollapsed(groupPosition);
+    public int getChildrenCount(int groupPosition) {
+        return regions.get(groupPosition).vendors.size();
     }
 
     @Override
-    public void onGroupExpanded(int groupPosition) {
-        super.onGroupExpanded(groupPosition);
+    public Object getGroup(int groupPosition) {
+        return regions.get(groupPosition);
     }
 
     @Override
-    public long getGroupId(int groupPosition) {
+    public Object getChild(int groupPosition, int childPosition) {
+        return regions.get(groupPosition).vendors.get(childPosition);
+    }
+
+    @Override
+    public long getGroupId(int i) {
         return 0;
     }
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded,
-                             View convertView, ViewGroup parent) {
-
-        View v = convertView;
-
-        if (v == null) {
-            LayoutInflater inflater = (LayoutInflater)ctx.getSystemService
-                    (Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(R.layout.prvexpandablelist_grouprow, parent, false);
-        }
-
-        TextView regionNameTextView = (TextView) v.findViewById(R.id.regionNameExpandableListTextView);
-        region regionObject = regionsList.get(groupPosition);
-        regionNameTextView.setText(regionObject.getRegionName());
-
-        return v;
-
+    public long getChildId(int i, int i1) {
+        return 0;
     }
 
     @Override
@@ -128,9 +73,71 @@ public class projectInPRVAdapter extends BaseExpandableListAdapter {
         return false;
     }
 
-    @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition) {
-        return false;
+    @Override // get parent/region row
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        if(convertView == null){
+            convertView = inflater.inflate(R.layout.prvexpandablelist_grouprow, null);
+        }
+
+        // SET REGION NAME
+        final TextView regionNameExpandableListTextView = (TextView) convertView.findViewById(R.id.regionNameExpandableListTextView);
+
+        region region = (region) getGroup(groupPosition);
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("regionID", Integer.toString(region.getRegionID()));
+        Connection conn = new Connection(params, new ConnectionPostListener() {
+            @Override
+            public void doSomething(String result) {
+                try{
+                    JSONObject reader = new JSONObject(result);
+                    regionNameExpandableListTextView.setText(reader.getString("regionName"));
+                }catch (JSONException e){
+                }
+            }
+        });
+        conn.execute(conn.URL + "/getRegionNameByID");
+
+
+        return convertView;
     }
 
+    @Override // Get child/vendor row
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+        if(convertView == null){
+            convertView = inflater.inflate(R.layout.prvexpandablelist_childrow, null);
+        }
+
+        // SET VENDOR NAME
+        final int vendorID = ((Pair<Integer, Integer>) getChild(groupPosition, childPosition)).first;
+        final TextView vendorNameExpandableListTextView = (TextView) convertView.findViewById(R.id.vendorNameExpandableListTextView);
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("vendorID", Integer.toString(vendorID));
+        Connection conn = new Connection(params, new ConnectionPostListener() {
+            @Override
+            public void doSomething(String result) {
+                try{
+                    JSONObject reader = new JSONObject(result);
+                    // Set child/vendor name
+                    vendorNameExpandableListTextView.setText(reader.getString("vendorName"));
+                }catch (JSONException e){
+                }
+            }
+        });
+        conn.execute(conn.URL + "/getVendorNameByID");
+
+
+        // SET YEAR TARGET
+        EditText yearTargetExpandableListEditText = (EditText) convertView.findViewById(R.id.yearTargetExpandableListEditText);
+        int yearTarget = ((Pair<Integer, Integer>) getChild(groupPosition, childPosition)).second;
+        yearTargetExpandableListEditText.setText(Integer.toString(yearTarget));
+
+        return convertView;
+    }
+
+    @Override
+    public boolean isChildSelectable(int i, int i1) {
+        return true;
+    }
 }

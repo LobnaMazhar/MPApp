@@ -19,7 +19,8 @@
         android:id="@+id/itemEvoCodeEditText"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:editable="true" />
+        android:editable="true"
+        android:textAlignment="center"/>
 
     <TextView
         android:layout_width="wrap_content"

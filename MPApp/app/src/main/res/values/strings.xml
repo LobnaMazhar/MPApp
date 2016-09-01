@@ -19,8 +19,16 @@
     </string>
     <string name="title_activity_prv_view">prvViewActivity</string>
     <string name="title_activity_bill_of_material">billOfMaterialActivity</string>
-    
+
     <array name="reports">
         <item>Technical Plan</item>
+        <item>New Rollout</item>
+        <item>Expansions</item>
+        <item>End of month</item>
     </array>
+    <string name="title_activity_expansions">expansionsActivity</string>
+
+    <string name="action_logout">Logout</string>
+    <string name="action_addUser">Add user</string>
+
 </resources>

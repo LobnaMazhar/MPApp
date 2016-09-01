@@ -50,7 +50,7 @@
             android:label="@string/title_activity_file_chooser"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".rolloutActivity"
+            android:name=".siteActivity"
             android:label="@string/title_activity_rollout"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -96,7 +96,7 @@
         <activity
             android:name=".billOfMaterialActivity"
             android:label="@string/title_activity_bill_of_material"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

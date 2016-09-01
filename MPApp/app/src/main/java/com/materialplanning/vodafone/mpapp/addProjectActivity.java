@@ -65,27 +65,8 @@ public class addProjectActivity extends AppCompatActivity {
             goToProject.putExtra("projectID", projectID);
             goToProject.putExtra("projectName", projectName);
             startActivity(goToProject);
+            finish();
         }
-    }
-
-    public void checkProjectNameExists(String projectName){
-        HashMap <String, String> params = new HashMap<String, String>();
-        params.put("projectName", projectName);
-
-        Connection conn = new Connection(params, new ConnectionPostListener() {
-            @Override
-            public void doSomething(String result) {
-                try{
-                    JSONObject reader = new JSONObject(result);
-                    if(reader.getBoolean("exists")){
-                        TextView projectNameErrorTextView = (TextView) findViewById(R.id.projectNameErrorTextView);
-                        projectNameErrorTextView.setText("Project name already exists !!");
-                    }
-                }catch (JSONException e){
-                }
-            }
-        });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/checkProjectNameExists");
     }
 
     public void addScenarios(View view){
@@ -198,7 +179,7 @@ public class addProjectActivity extends AppCompatActivity {
                     }
                 }
             });
-            conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/addScenarioToProject");
+            conn.execute(conn.URL + "/addScenarioToProject");
         }
         Toast.makeText(addProjectActivity.this, Integer.toString(selectedScenarios.size()) + " scenarios added.", Toast.LENGTH_LONG).show();
     }
@@ -225,7 +206,7 @@ public class addProjectActivity extends AppCompatActivity {
                     }
                 }
             });
-            conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/addProject");
+            conn.execute(conn.URL + "/addProject");
         }
     }
 
@@ -243,6 +224,16 @@ public class addProjectActivity extends AppCompatActivity {
                 }
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getProjectID");
+        conn.execute(conn.URL + "/getProjectID");
     }
+
+     /*
+    //Dot Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_dot, menu);
+        return true;
+    }
+     */
 }

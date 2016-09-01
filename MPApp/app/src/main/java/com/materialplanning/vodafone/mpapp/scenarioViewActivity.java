@@ -46,7 +46,7 @@ public class scenarioViewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scenario_view);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(Integer.toString(getIntent().getExtras().getInt("scenarioNumber")));
+        toolbar.setTitle(getIntent().getExtras().getString("scenarioNumber"));
         setSupportActionBar(toolbar);
 
         getScenarioNumber();
@@ -58,7 +58,7 @@ public class scenarioViewActivity extends AppCompatActivity {
 
     public void getScenarioNumber(){
         EditText scenarioNumberEditText = (EditText) findViewById(R.id.scenarioNumberEditText);
-        scenarioNumberEditText.setText(Integer.toString(getIntent().getExtras().getInt("scenarioNumber")));
+        scenarioNumberEditText.setText(getIntent().getExtras().getString("scenarioNumber"));
     }
 
     public void getProjectID(){
@@ -75,7 +75,7 @@ public class scenarioViewActivity extends AppCompatActivity {
                 }
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getProjectID");
+        conn.execute(conn.URL + "/getProjectID");
     }
 
     public void getProjectName(){
@@ -101,7 +101,7 @@ public class scenarioViewActivity extends AppCompatActivity {
                     }
                 }
             });
-            conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getProjectName");
+            conn.execute(conn.URL + "/getProjectName");
         }
     }
 
@@ -233,7 +233,7 @@ public class scenarioViewActivity extends AppCompatActivity {
                 }
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getItemsInScenario");
+        conn.execute(conn.URL + "/getItemsInScenario");
     }
 
     public void editScenario(View view){
@@ -256,7 +256,7 @@ public class scenarioViewActivity extends AppCompatActivity {
                 }
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/editScenario");
+        conn.execute(conn.URL + "/editScenario");
 
 
         // Add items to the scenario using scenarioID sent with the intent
@@ -385,7 +385,7 @@ public class scenarioViewActivity extends AppCompatActivity {
                 }
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getItems");
+        conn.execute(conn.URL + "/getItems");
     }
 
     public void addItemsToScenario(final ArrayList<Integer> selectedItemsToAdd) {
@@ -414,4 +414,14 @@ public class scenarioViewActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
     }
+
+     /*
+    //Dot Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_dot, menu);
+        return true;
+    }
+     */
 }

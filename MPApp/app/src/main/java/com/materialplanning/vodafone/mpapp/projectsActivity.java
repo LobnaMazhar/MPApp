@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -60,7 +61,7 @@ public class projectsActivity extends AppCompatActivity {
                     projectsListView.setOnTouchListener(new OnSwipeTouchListener(projectsActivity.this, projectsListView){
                         public void onSwipeLeft(int pos) {
                             try{
-                                deleteProject(reader.getJSONObject(pos).getInt("projectID"));
+                                deleteProject(reader.getJSONObject(pos).getInt("projectID"), reader.getJSONObject(pos).getString("projectName"));
                             }catch (JSONException e){
                             }
                         }
@@ -97,11 +98,11 @@ public class projectsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void deleteProject(final int projectID){
+    public void deleteProject(final int projectID, String projectName){
         //Put up the Yes/No message box
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Delete project");
-        builder.setMessage("Are you sure?");
+        builder.setMessage("Are you sure you want to delete project " + projectName + " ?");
         builder.setIcon(android.R.drawable.ic_dialog_alert);
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -129,5 +130,15 @@ public class projectsActivity extends AppCompatActivity {
         builder.setNegativeButton("No", null);
         builder .show();
     }
+
+     /*
+    //Dot Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_dot, menu);
+        return true;
+    }
+     */
 
 }

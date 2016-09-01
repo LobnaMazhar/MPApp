@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,12 +27,14 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class addScenarioActivity extends AppCompatActivity {
 
     ArrayList<Integer> selectedItemsIDs;
     int scenarioID = 0; // used in getting scenarioID of the recently created scenario using scenario Number
     boolean addItemsButtonDown = false;
+    String selectedCablesType = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,7 @@ public class addScenarioActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         selectedItemsIDs = new ArrayList<Integer>();
+        prepareCablesType();
     }
 
     public void saveScenario(View view) {
@@ -53,10 +57,14 @@ public class addScenarioActivity extends AppCompatActivity {
             if (scenarioNumber.isEmpty()) {
                 Toast.makeText(addScenarioActivity.this, "Please specify the scenario number", Toast.LENGTH_LONG).show();
                 return;
+            }else if (selectedCablesType.equals("")){
+                Toast.makeText(addScenarioActivity.this, "Please specify cables type", Toast.LENGTH_LONG).show();
+                return;
             }
 
             HashMap<String, String> params = new HashMap<String, String>();
             params.put("scenarioNumber", scenarioNumber);
+            params.put("cablesType", selectedCablesType);
 
             Connection conn = new Connection(params, new ConnectionPostListener() {
                 @Override
@@ -80,7 +88,7 @@ public class addScenarioActivity extends AppCompatActivity {
                     }
                 }
             });
-            conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/addScenario");
+            conn.execute(conn.URL + "/addScenario");
         }else{
             Toast.makeText(addScenarioActivity.this, "A new scenario is added", Toast.LENGTH_SHORT).show();
 
@@ -262,6 +270,7 @@ public class addScenarioActivity extends AppCompatActivity {
     public void addScenario(String scenarioNumber){
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("scenarioNumber", scenarioNumber);
+        params.put("cablesType", selectedCablesType);
 
         Connection conn = new Connection(params, new ConnectionPostListener() {
             @Override
@@ -274,4 +283,42 @@ public class addScenarioActivity extends AppCompatActivity {
         });
         conn.execute(conn.URL + "/addScenario");
     }
+
+    public void prepareCablesType(){
+
+        final List<String> cablesTypeList = new ArrayList<>();
+        cablesTypeList.add("");
+        cablesTypeList.add("Feeder");
+        cablesTypeList.add("Fiber");
+
+        Spinner cablesTypeSpinner = (Spinner) findViewById(R.id.cablesTypeSpinner);
+        ArrayAdapter<String> cablesTypeAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, cablesTypeList);
+        cablesTypeSpinner.setAdapter(cablesTypeAdapter);
+
+        cablesTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                String cablesType = cablesTypeList.get(position);
+                if(!cablesType.equals("")) {
+                    Toast.makeText(addScenarioActivity.this, cablesType, Toast.LENGTH_SHORT).show();
+                    selectedCablesType = cablesTypeList.get(position);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    /*
+    //Dot Menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_dot, menu);
+        return true;
+    }
+     */
 }

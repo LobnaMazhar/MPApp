@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.materialplanning.vodafone.mpapp">
+
+
+    <item
+        android:id="@+id/action_logout"
+        android:orderInCategory="100"
+        android:title="@string/action_logout"
+        app:showAsAction="never" />
+
+    <item
+        android:icon="@android:drawable/ic_menu_add"
+        android:id="@+id/addUser_button"
+        android:title="@string/action_addUser"
+        app:showAsAction="ifRoom"
+        tools:ignore="AppCompatResource" />
+
+
+</menu>
