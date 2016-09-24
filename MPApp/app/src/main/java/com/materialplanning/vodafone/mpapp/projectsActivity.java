@@ -90,7 +90,7 @@ public class projectsActivity extends AppCompatActivity {
                 }
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getProjects");
+        conn.execute(conn.URL + "/getProjects");
     }
 
     public void addProject(View view){
@@ -124,7 +124,7 @@ public class projectsActivity extends AppCompatActivity {
                         }
                     }
                 });
-                conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/deleteProject");
+                conn.execute(conn.URL + "/deleteProject");
             }
         });
         builder.setNegativeButton("No", null);

@@ -69,7 +69,7 @@ public class itemViewActivity extends AppCompatActivity {
                 }
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/editItem");
+        conn.execute(conn.URL + "/editItem");
     }
     */
 
@@ -98,7 +98,7 @@ public class itemViewActivity extends AppCompatActivity {
                         }
                     }
                 });
-                conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/deleteItem");
+                conn.execute(conn.URL + "/deleteItem");
             }
         });
         builder.setNegativeButton("No", null);

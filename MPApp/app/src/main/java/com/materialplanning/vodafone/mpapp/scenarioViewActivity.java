@@ -215,7 +215,7 @@ public class scenarioViewActivity extends AppCompatActivity {
                                                         }
                                                     }
                                                 });
-                                                connection.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/editItemQuantityInScenario");
+                                                connection.execute(connection.URL + "/editItemQuantityInScenario");
                                             }
                                         });
                                         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -291,13 +291,13 @@ public class scenarioViewActivity extends AppCompatActivity {
                             }
                         }
                     });
-                    conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/deleteItemFromScenario");
+                    conn.execute(conn.URL + "/deleteItemFromScenario");
                 }
                 Toast.makeText(scenarioViewActivity.this, selectedItemsToDelete.size() + " items deleted.", Toast.LENGTH_LONG).show();
 
                 Intent goToScenario = new Intent(scenarioViewActivity.this, scenarioViewActivity.class);
                 goToScenario.putExtra("scenarioID", getIntent().getExtras().getInt("scenarioID"));
-                goToScenario.putExtra("scenarioNumber", getIntent().getExtras().getInt("scenarioNumber"));
+                goToScenario.putExtra("scenarioNumber", Integer.toString(getIntent().getExtras().getInt("scenarioNumber")));
                 startActivity(goToScenario);
                 finish();
             }
@@ -404,7 +404,7 @@ public class scenarioViewActivity extends AppCompatActivity {
                     }
                 }
             });
-            conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/addItemToScenario");
+            conn.execute(conn.URL + "/addItemToScenario");
         }
             Toast.makeText(scenarioViewActivity.this, Integer.toString(selectedItemsToAdd.size()) + " items added to scenario number " + Integer.toString(getIntent().getExtras().getInt("scenarioNumber")), Toast.LENGTH_LONG).show();
 

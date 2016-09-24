@@ -1,11 +1,10 @@
 package com.materialplanning.vodafone.mpapp;
 
-import android.graphics.Region;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
@@ -18,30 +17,27 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class prvViewActivity extends AppCompatActivity {
+public class prvmViewActivity extends AppCompatActivity {
 
     int huaweiTotal = 0, ericssonTotal = 0, totalTotal = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_prv_view);
+        setContentView(R.layout.activity_prvm_view);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(getIntent().getExtras().getString("projectName"));
         setSupportActionBar(toolbar);
 
         prepareExpandableListView();
-   //     getTotalValues();
     }
 
     public void prepareExpandableListView(){
-        // get PRVs
-        // TODO h3ml enu y-get unique names ll projects ely fl technical plan w ama ydus 3la wa7d yru7 ygeb l data bta3 which is kol l regions ely tb3 vendor mo3yn b year target
         final ArrayList<region> regionsList = new ArrayList<>();
         final ArrayList<Integer> foundRegions = new ArrayList<>();
 
-        final ExpandableListView prvExpandableListView = (ExpandableListView) findViewById(R.id.prvExpandableListView);
+        final ExpandableListView prvmExpandableListView = (ExpandableListView) findViewById(R.id.prvmExpandableListView);
 
 
         HashMap<String, String> params = new HashMap<String, String>();
@@ -54,7 +50,7 @@ public class prvViewActivity extends AppCompatActivity {
                     for(int i=0; i<reader.length(); ++i){
                         JSONObject data = reader.getJSONObject(i);
 
-                        int regionID = data.getInt("prvRegionID");
+                        int regionID = data.getInt("prvmRegionID");
                         if(!foundRegions.contains(regionID)){
                             foundRegions.add(regionID);
 
@@ -65,17 +61,17 @@ public class prvViewActivity extends AppCompatActivity {
 
                         int regionIDIndex = foundRegions.indexOf(regionID);
                         region regionObjectAtIndex = regionsList.get(regionIDIndex);
-                        int vendorID = data.getInt("prvVendorID"), yearTarget = data.getInt("prvYearTarget");
+                        int vendorID = data.getInt("prvmVendorID"), yearTarget = data.getInt("prvmYearTarget");
                         regionObjectAtIndex.vendors.add(Pair.create(vendorID, yearTarget));
-                        if(vendorID == 1){ // Huawei (in database)
+                        if(vendorID == 1){ // NOTE :: Huawei (in database)
                             huaweiTotal += yearTarget;
-                        }else if(vendorID == 2){ // Ericsson (in database)
+                        }else if(vendorID == 2){ // NOTE :: Ericsson (in database)
                             ericssonTotal += yearTarget;
                         }
                     }
 
-                    projectInPRVAdapter prvListAdapter = new projectInPRVAdapter(prvViewActivity.this, regionsList);
-                    prvExpandableListView.setAdapter(prvListAdapter);
+                    projectInPRVMAdapter prvmListAdapter = new projectInPRVMAdapter(prvmViewActivity.this, regionsList);
+                    prvmExpandableListView.setAdapter(prvmListAdapter);
 
                     getTotalValues();
 
@@ -83,13 +79,24 @@ public class prvViewActivity extends AppCompatActivity {
                 }
             }
         });
-        conn.execute(conn.URL + "/getPRVsByProjectID");
+        conn.execute(conn.URL + "/getPRVMsByProjectID");
 
-        // TODO m7taga on click asln ??
-        prvExpandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+        prvmExpandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long id) {
-                Toast.makeText(getApplicationContext(), Integer.toString(regionsList.get(groupPosition).vendors.get(childPosition).first) + " ,, " + Integer.toString(regionsList.get(groupPosition).vendors.get(childPosition).second), Toast.LENGTH_LONG).show();
+            //    Toast.makeText(getApplicationContext(), Integer.toString(regionsList.get(groupPosition).vendors.get(childPosition).first) + " ,, " + Integer.toString(regionsList.get(groupPosition).vendors.get(childPosition).second), Toast.LENGTH_LONG).show();
+
+                // Monthly phasing per region
+                Intent goToMonthlyPhasing = new Intent(prvmViewActivity.this, monthlyPhasingActivity.class);
+                // TODO put extras
+                goToMonthlyPhasing.putExtra("projectID", getIntent().getExtras().getInt("projectID"));
+                goToMonthlyPhasing.putExtra("projectName", getIntent().getExtras().getString("projectName"));
+                goToMonthlyPhasing.putExtra("regionID", regionsList.get(groupPosition).getRegionID());
+                goToMonthlyPhasing.putExtra("vendorID", regionsList.get(groupPosition).vendors.get(childPosition).first);
+                goToMonthlyPhasing.putExtra("yearTarget", regionsList.get(groupPosition).vendors.get(childPosition).second);
+                startActivity(goToMonthlyPhasing);
+                finish();
+
                 return false;
             }
         });

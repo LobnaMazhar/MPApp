@@ -21,56 +21,8 @@ public class reportsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getReports();
-
-      /*     String filename = getIntent().getExtras().getString("filename");
-        if(!filename.equals(""))
-            saveBOM(filename);*/
-    }
-    /*
-        public void getBOM(View view){
-            startActivity(new Intent(reportsActivity.this, fileChooserActivity.class));
-        }
-
-        public void saveBOM(String filename){
-            String cellContents="";
-            try{
-
-               /* BufferedReader inputReader = new BufferedReader(new InputStreamReader(
-                        openFileInput("rollout.xls")));
-                StringBuffer stringBuffer = new StringBuffer();
-                while ((cellContents = inputReader.readLine()) != null) {
-                    Toast.makeText(this, "READING", Toast.LENGTH_SHORT).show();
-                    stringBuffer.append(cellContents + "\n");
-                }*/
-/*
-            File sdcard = Environment.getExternalStorageDirectory();
-            File file = new File(sdcard,filename);
-            FileInputStream myInput = new FileInputStream(file);
-
-// TODO -> Google :: Read excel sheet on device using android studio
-           Workbook workbook = Workbook.getWorkbook(myInput);
-            Sheet sheet = workbook.getSheet(0);
-
-            int rows = sheet.getRows();
-            int columns = sheet.getColumns();
-            for(int r=0; r<rows; ++r){
-                for(int c=0; c<columns; ++c){
-                    Cell cell = sheet.getCell(r,c);
-                    cellContents += cell.getContents();
-                }
-                cellContents+="\n";
-            }
-        }catch(Exception e){
-        }
-
-        Toast.makeText(this, "S " + cellContents + " E.", Toast.LENGTH_SHORT).show();
     }
 
-    public void rollout(View view){
-        Intent intent = new Intent(this, siteActivity.class);
-        startActivity(intent);
-    }
-*/
     public void getReports(){
         final String[] reportsList = getResources().getStringArray(R.array.reports);
 
@@ -93,6 +45,9 @@ public class reportsActivity extends AppCompatActivity {
                     Intent goToExpansions = new Intent(reportsActivity.this, siteActivity.class);
                     goToExpansions.putExtra("rollout/expansion", "2");
                     startActivity(goToExpansions);
+                }else if(reportsList[position].equals("Monthly phasing per project")){
+                    Intent goToMonthlyPhasingPerProject = new Intent(reportsActivity.this, monthlyPhasingPerProjectActivity.class);
+                    startActivity(goToMonthlyPhasingPerProject);
                 }
             }
         });

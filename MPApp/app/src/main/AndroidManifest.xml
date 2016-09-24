@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -44,10 +43,6 @@
         <activity
             android:name=".reportsActivity"
             android:label="@string/title_activity_reports"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".fileChooserActivity"
-            android:label="@string/title_activity_file_chooser"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".siteActivity"
@@ -90,13 +85,25 @@
             android:label="@string/title_activity_add_project_to_technical_plan"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".prvViewActivity"
+            android:name=".prvmViewActivity"
             android:label="@string/title_activity_prv_view"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".billOfMaterialActivity"
             android:label="@string/title_activity_bill_of_material"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".monthlyPhasingActivity"
+            android:label="@string/title_activity_monthly_phasing"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".addMonthlyPhasingToProjectToTechnicalPlanActivity"
+            android:label="@string/title_activity_add_monthly_phasing_to_project_to_technical_plan"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".monthlyPhasingPerProjectActivity"
+            android:label="@string/title_activity_monthly_phasing_per_project"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

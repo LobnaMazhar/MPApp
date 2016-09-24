@@ -36,14 +36,20 @@ public class siteAdapter extends ArrayAdapter<site>{
 
         site siteObject = siteList.get(position);
 
-        getMonth(siteObject.getSiteDate(), siteListView);
+        TextView siteDateTextView = (TextView) siteListView.findViewById(R.id.siteDateTextView);
+        siteDateTextView.setText(siteObject.getSiteMonthName());
+       // getMonth(siteObject.getSiteDate(), siteListView);
 
         TextView siteIDTextView = (TextView) siteListView.findViewById(R.id.siteIDTextView);
         siteIDTextView.setText(siteObject.getSiteID());
 
-        getProjectName(siteObject.getSiteProjectID(), siteListView);
+        TextView siteTypeTextView = (TextView) siteListView.findViewById(R.id.siteTypeTextView);
+        siteTypeTextView.setText(siteObject.getSiteProjectName());
+      //  getProjectName(siteObject.getSiteProjectID(), siteListView);
 
-        getRegionNameForSite(siteObject.getSiteID(), siteListView);
+        TextView siteRegionTextView = (TextView) siteListView.findViewById(R.id.siteRegionTextView);
+        siteRegionTextView.setText(siteObject.getSiteRegionName());
+//        getRegionNameForSite(siteObject.getSiteID(), siteListView);
 
         return siteListView;
     }

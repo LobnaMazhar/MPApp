@@ -30,6 +30,6 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:src="@android:drawable/ic_menu_save"
-        android:onClick="saveProjectInTechnicalPlan" />
+        android:onClick="nextMonthlyPhasing" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -5,5 +5,6 @@
     <color name="colorAccent">#b71c1c</color>
     <color name="vodafoneRed">#e60202</color>
     <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
     <color name="vodafoneGrey">#4a4d4e</color>
 </resources>

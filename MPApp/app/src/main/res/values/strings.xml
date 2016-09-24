@@ -6,7 +6,6 @@
     <string name="title_activity_add_user">addUserActivity</string>
     <string name="title_activity_item_view">itemViewActivity</string>
     <string name="title_activity_reports">reportsActivity</string>
-    <string name="title_activity_file_chooser">fileChooserActivity</string>
     <string name="title_activity_rollout">rolloutActivity</string>
     <string name="title_activity_technical_plan_view">technicalPlanViewActivity</string>
     <string name="title_activity_scenarios">scenariosActivity</string>
@@ -24,11 +23,18 @@
         <item>Technical Plan</item>
         <item>New Rollout</item>
         <item>Expansions</item>
+        <item>Monthly phasing per project</item>
         <item>End of month</item>
     </array>
     <string name="title_activity_expansions">expansionsActivity</string>
 
     <string name="action_logout">Logout</string>
     <string name="action_addUser">Add user</string>
+    <string name="title_activity_monthly_phasing">monthlyPhasingActivity</string>
+    <string name="title_activity_add_monthly_phasing_to_project_to_technical_plan">
+        addMonthlyPhasingToProjectToTechnicalPlan
+    </string>
+    <string name="title_activity_monthly_phasing_per_project">monthlyPhasingPerProjectActivity
+    </string>
 
 </resources>

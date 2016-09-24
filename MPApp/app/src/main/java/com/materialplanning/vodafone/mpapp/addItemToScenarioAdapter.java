@@ -54,7 +54,7 @@ public class addItemToScenarioAdapter extends ArrayAdapter<itemInScenario> {
                 }
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getItemShortDescription");
+        conn.execute(conn.URL + "/getItemShortDescription");
 
         return itemInScenarioListView;
     }

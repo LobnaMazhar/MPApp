@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.materialplanning.vodafone.mpapp.technicalPlansActivity">
+    tools:context="com.materialplanning.vodafone.mpapp.monthlyPhasingActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_technical_plans" />
+    <include layout="@layout/content_monthly_phasing" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -29,16 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_menu_add"
-        android:onClick="addProject" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/generate_report"
-        android:onClick="generateTechnicalPlansReport" />
+        android:src="@android:drawable/ic_menu_save"
+        android:onClick="saveTarget" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -24,9 +24,9 @@ public class loginActivity extends AppCompatActivity {
     }
 
     public void login(View view){
-        startActivity(new Intent(loginActivity.this, homeActivity.class));
+      //  startActivity(new Intent(loginActivity.this, homeActivity.class));
         // TODO delete above line and uncomment the next block
-/*
+
         HashMap<String, String> params = new HashMap<String, String>();
 
         EditText usernameText = (EditText) findViewById(R.id.loginUsernameTextField);
@@ -62,6 +62,6 @@ public class loginActivity extends AppCompatActivity {
 
             }
         });
-        conn.execute(conn.URL + "/login");*/
+        conn.execute(conn.URL + "/login");
     }
 }

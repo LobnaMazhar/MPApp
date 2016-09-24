@@ -7,6 +7,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 public class homeActivity extends AppCompatActivity {
 
@@ -14,6 +16,13 @@ public class homeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+       /*
+        if(!getIntent().getExtras().getString("userName").equals("admin")){
+            Button addUserButton = (Button) findViewById(R.id.addUser_button);
+            addUserButton.setVisibility(View.INVISIBLE);
+        }
+        */
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Home");
@@ -56,9 +65,7 @@ public class homeActivity extends AppCompatActivity {
        int itemId = item.getItemId();
         switch(itemId){
             case R.id.addUser_button:
-             //   data = getIntent().getExtras();
                 Intent addNewUser = new Intent(homeActivity.this, addUserActivity.class);
-              //  addNewPlace.putExtra("currentUserID",data.getInt("userID"));
                 startActivity(addNewUser);
                 break;
             case R.id.action_logout:

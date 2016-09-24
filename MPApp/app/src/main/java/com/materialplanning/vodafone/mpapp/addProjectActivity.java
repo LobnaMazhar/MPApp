@@ -162,7 +162,7 @@ public class addProjectActivity extends AppCompatActivity {
                 }
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getScenarios");
+        conn.execute(conn.URL + "/getScenarios");
     }
 
     public void addScenariosToProject(ArrayList<Integer> selectedScenarios){

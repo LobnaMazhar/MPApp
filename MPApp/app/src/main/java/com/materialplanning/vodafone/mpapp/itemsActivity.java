@@ -97,7 +97,7 @@ public class itemsActivity extends AppCompatActivity {
                 }
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getItems");
+        conn.execute(conn.URL + "/getItems");
     }
 
     public void deleteItem(final int itemID, String itemShortDescription){

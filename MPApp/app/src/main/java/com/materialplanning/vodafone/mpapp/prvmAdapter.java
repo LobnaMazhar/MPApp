@@ -13,14 +13,14 @@ import java.util.ArrayList;
 /**
  * Created by Lobna on 26-Aug-16.
  */
-public class prvAdapter extends ArrayAdapter<prv> {
+public class prvmAdapter extends ArrayAdapter<prvm> {
     Context context; // TAKE CARE ::: CONTEXT IS NOT PRIVATE
-    ArrayList<prv> prvs;
+    ArrayList<prvm> prvms;
 
-    public prvAdapter(Context context, ArrayList<prv> prvs) {
-        super(context, R.layout.prvslist_row, prvs);
+    public prvmAdapter(Context context, ArrayList<prvm> prvms) {
+        super(context, R.layout.prvmslist_row, prvms);
         this.context = context;
-        this.prvs = prvs;
+        this.prvms = prvms;
     }
 
     @Override
@@ -28,13 +28,13 @@ public class prvAdapter extends ArrayAdapter<prv> {
         LayoutInflater inflater = ((Activity) context).getLayoutInflater();
         //LayoutInflater inflater = LayoutInflater.from(getContext());
 
-        View prvListView = inflater.inflate(R.layout.prvslist_row, parent, false);
+        View prvmListView = inflater.inflate(R.layout.prvmslist_row, parent, false);
 
-        prv prvObject = prvs.get(position);
+        prvm prvmObject = prvms.get(position);
 
-        TextView projectNameInPRVTextView = (TextView) prvListView.findViewById(R.id.projectNameInPRVTextView);
-        projectNameInPRVTextView.setText(prvObject.getProjectName());
+        TextView projectNameInPRVMTextView = (TextView) prvmListView.findViewById(R.id.projectNameInPRVMTextView);
+        projectNameInPRVMTextView.setText(prvmObject.getProjectName());
 
-        return prvListView;
+        return prvmListView;
     }
 }

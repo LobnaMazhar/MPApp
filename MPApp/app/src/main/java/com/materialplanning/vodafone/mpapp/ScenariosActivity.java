@@ -89,7 +89,7 @@ public class scenariosActivity extends AppCompatActivity {
                 }
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getScenarios");
+        conn.execute(conn.URL + "/getScenarios");
     }
 
     public void deleteScenario(final int scenarioID, int scenarioNumber){
@@ -117,7 +117,7 @@ public class scenariosActivity extends AppCompatActivity {
                         }
                     }
                 });
-                conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/deleteScenario");
+                conn.execute(conn.URL + "/deleteScenario");
             }
         });
         builder.setNegativeButton("No", null);

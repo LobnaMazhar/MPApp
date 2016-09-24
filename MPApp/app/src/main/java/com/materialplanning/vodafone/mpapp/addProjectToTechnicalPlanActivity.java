@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -38,7 +37,7 @@ public class addProjectToTechnicalPlanActivity extends AppCompatActivity {
         prepareVendors();
     }
 
-    public void saveProjectInTechnicalPlan(View view){
+    public void nextMonthlyPhasing(View view){
 
         EditText yearTargetEditText = (EditText) findViewById(R.id.yearTargetEditText);
         String yearTarget = yearTargetEditText.getText().toString();
@@ -53,28 +52,13 @@ public class addProjectToTechnicalPlanActivity extends AppCompatActivity {
             Toast.makeText(addProjectToTechnicalPlanActivity.this, "Select vendor", Toast.LENGTH_LONG).show();
             return;
         }else{
-            HashMap<String, String> params = new HashMap<String, String>();
-            params.put("projectID",Integer.toString(selectedProjectID));
-            params.put("regionID",Integer.toString(selectedRegionID));
-            params.put("vendorID",Integer.toString(selectedVendorID));
-            params.put("yearTarget",yearTarget);
-
-            Connection conn = new Connection(params, new ConnectionPostListener() {
-                @Override
-                public void doSomething(String result) {
-                    try{
-                        JSONObject reader = new JSONObject(result);
-                        if(reader.getBoolean("added")) {
-                            Toast.makeText(addProjectToTechnicalPlanActivity.this, "Project added", Toast.LENGTH_SHORT).show();
-
-                            Intent goToTechnicalPlans = new Intent(addProjectToTechnicalPlanActivity.this, technicalPlansActivity.class);
-                            startActivity(goToTechnicalPlans);
-                        }
-                    }catch (JSONException e){
-                    }
-                }
-            });
-            conn.execute(conn.URL + "/addProjectToTechnicalPlan");
+            Intent goToAddMonthlyPhasing = new Intent(addProjectToTechnicalPlanActivity.this, addMonthlyPhasingToProjectToTechnicalPlanActivity.class);
+            goToAddMonthlyPhasing.putExtra("projectID",selectedProjectID);
+            goToAddMonthlyPhasing.putExtra("regionID",selectedRegionID);
+            goToAddMonthlyPhasing.putExtra("vendorID",selectedVendorID);
+            goToAddMonthlyPhasing.putExtra("yearTarget",yearTarget);
+            startActivity(goToAddMonthlyPhasing);
+            finish();
         }
     }
 

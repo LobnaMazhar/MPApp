@@ -82,7 +82,7 @@ public class addItemsToScenarioActivity extends AppCompatActivity {
                     }
                 }
             });
-            conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/getItems");
+            conn.execute(conn.URL + "/getItems");
         }
     }
 
@@ -105,7 +105,7 @@ public class addItemsToScenarioActivity extends AppCompatActivity {
                 }
             }
         });
-        conn.execute("http://mpapp-radionetwork.rhcloud.com/MPApp/rest/addItemsToScenario");
+        conn.execute(conn.URL + "/addItemsToScenario");
     }
 
     //Dot Menu

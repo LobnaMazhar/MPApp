@@ -6,33 +6,26 @@ package com.materialplanning.vodafone.mpapp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Locale;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Region;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.CheckedTextView;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 @SuppressWarnings("unchecked")
-public class projectInPRVAdapter extends BaseExpandableListAdapter {
+public class projectInPRVMAdapter extends BaseExpandableListAdapter {
 
     private Context context;
     private ArrayList<region> regions;
     private LayoutInflater inflater;
 
-    public projectInPRVAdapter(Context context, ArrayList<region> regions){
+    public projectInPRVMAdapter(Context context, ArrayList<region> regions){
         this.context = context;
         this.regions = regions;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -76,7 +69,7 @@ public class projectInPRVAdapter extends BaseExpandableListAdapter {
     @Override // get parent/region row
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         if(convertView == null){
-            convertView = inflater.inflate(R.layout.prvexpandablelist_grouprow, null);
+            convertView = inflater.inflate(R.layout.prvmexpandablelist_grouprow, null);
         }
 
         // SET REGION NAME
@@ -103,14 +96,14 @@ public class projectInPRVAdapter extends BaseExpandableListAdapter {
     }
 
     @Override // Get child/vendor row
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         if(convertView == null){
-            convertView = inflater.inflate(R.layout.prvexpandablelist_childrow, null);
+            convertView = inflater.inflate(R.layout.prvmexpandablelist_childrow, null);
         }
 
         // SET VENDOR NAME
         final int vendorID = ((Pair<Integer, Integer>) getChild(groupPosition, childPosition)).first;
-        final TextView vendorNameExpandableListTextView = (TextView) convertView.findViewById(R.id.vendorNameExpandableListTextView);
+        final TextView vendorNameAndYearTargetExpandableListTextView = (TextView) convertView.findViewById(R.id.vendorNameAndYearTargetExpandableListTextView);
 
         HashMap<String, String> params = new HashMap<>();
         params.put("vendorID", Integer.toString(vendorID));
@@ -119,19 +112,14 @@ public class projectInPRVAdapter extends BaseExpandableListAdapter {
             public void doSomething(String result) {
                 try{
                     JSONObject reader = new JSONObject(result);
-                    // Set child/vendor name
-                    vendorNameExpandableListTextView.setText(reader.getString("vendorName"));
+                    // Set child/vendor name and year target ,,,, // 3mlahom f one textview together 3shan 3'er kda kant l click listener msh sh3'ala
+                    int yearTarget = ((Pair<Integer, Integer>) getChild(groupPosition, childPosition)).second;
+                    vendorNameAndYearTargetExpandableListTextView.setText(reader.getString("vendorName") + "\t\t\t\t\t\t\t\t\t\t" + Integer.toString(yearTarget));
                 }catch (JSONException e){
                 }
             }
         });
         conn.execute(conn.URL + "/getVendorNameByID");
-
-
-        // SET YEAR TARGET
-        EditText yearTargetExpandableListEditText = (EditText) convertView.findViewById(R.id.yearTargetExpandableListEditText);
-        int yearTarget = ((Pair<Integer, Integer>) getChild(groupPosition, childPosition)).second;
-        yearTargetExpandableListEditText.setText(Integer.toString(yearTarget));
 
         return convertView;
     }

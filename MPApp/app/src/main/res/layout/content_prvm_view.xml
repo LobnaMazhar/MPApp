@@ -9,13 +9,13 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.materialplanning.vodafone.mpapp.prvViewActivity"
-    tools:showIn="@layout/activity_prv_view">
+    tools:context=".prvmViewActivity"
+    tools:showIn="@layout/activity_prvm_view">
 
     <ExpandableListView
         android:layout_width="wrap_content"
         android:layout_height="350dp"
-        android:id="@+id/prvExpandableListView"
+        android:id="@+id/prvmExpandableListView"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -26,7 +26,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Total"
         android:id="@+id/total"
-        android:layout_below="@+id/prvExpandableListView"
+        android:layout_below="@+id/prvmExpandableListView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="29dp"
@@ -51,8 +51,8 @@
         android:layout_marginRight="40dp"
         android:layout_marginEnd="30dp"
         android:layout_below="@+id/total"
-        android:layout_alignRight="@+id/prvExpandableListView"
-        android:layout_alignEnd="@+id/prvExpandableListView" />
+        android:layout_alignRight="@+id/prvmExpandableListView"
+        android:layout_alignEnd="@+id/prvmExpandableListView" />
 
     <TextView
         android:layout_width="wrap_content"
